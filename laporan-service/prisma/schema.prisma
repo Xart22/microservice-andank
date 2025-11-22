@@ -1,17 +1,12 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
   provider = "prisma-client"
-  output   = "../generated/prisma"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
 }
+
 
 
 enum StatusLaporan {
@@ -39,6 +34,9 @@ model LaporanMasyarakat {
   created_at        DateTime  @default(now())
   updated_at        DateTime  @updatedAt
   updated_by        Int?
+  
+
+  responLaporans ResponLaporan[]
 }
 
 model ResponLaporan {
@@ -47,4 +45,6 @@ model ResponLaporan {
   responder_id    Int
   tanggapan       String
   created_at      DateTime  @default(now())
+  updated_at      DateTime  @updatedAt
+  laporan         LaporanMasyarakat @relation(fields: [laporan_id], references: [id])
 }

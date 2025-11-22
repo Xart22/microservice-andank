@@ -1,0 +1,31 @@
+export const createRuasSchema = {
+  body: {
+    type: "object",
+    required: [
+      "id_ruas_jalan",
+      "nama_ruas_jalan",
+      "panjang_km",
+      "sta_awal",
+      "sta_akhir",
+      "lat_awal",
+      "long_awal",
+      "lat_akhir",
+      "long_akhir",
+      "uptd_id",
+      "sup_id",
+    ],
+    properties: {
+      id_ruas_jalan: { type: "string" },
+      nama_ruas_jalan: { type: "string" },
+      panjang_km: { type: "number" },
+      sta_awal: { type: "string" },
+      sta_akhir: { type: "string" },
+      lat_awal: { type: "number" },
+      long_awal: { type: "number" },
+      lat_akhir: { type: "number" },
+      long_akhir: { type: "number" },
+      uptd_id: { type: "string" },
+      sup_id: { type: "string" },
+    },
+  },
+};

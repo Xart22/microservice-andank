@@ -1,9 +1,9 @@
 import fp from "fastify-plugin";
 import { FastifyInstance } from "fastify";
-
 import "dotenv/config";
 import { PrismaMariaDb } from "@prisma/adapter-mariadb";
 import { PrismaClient } from "../../generated/prisma/client";
+
 declare module "fastify" {
   interface FastifyInstance {
     prisma: PrismaClient;

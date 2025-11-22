@@ -10,7 +10,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
 }
 
 
@@ -22,28 +22,33 @@ model RuasJalan {
   panjang_km        Float
   sta_awal         String
   sta_akhir        String
-  latitude_awal    Float
-  longitude_awal   Float
+  lat_awal    Float
+  long_awal   Float
+  lat_akhir   Float
+  long_akhir  Float
   uptd_id         Int
   uptd            Uptd      @relation(fields: [uptd_id], references: [id])
-  sup_id          Int
-  sup             Sup       @relation(fields: [sup_id], references: [id])
+  sup_id          Int?
+  sup             Sup?      @relation(fields: [sup_id], references: [id])
   createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
+  updatedAt        DateTime  @default(now()) @updatedAt
 }
 
 
 model Sup {
   id        Int      @id @default(autoincrement())
   name      String   @unique
+  uptd_id   Int
+  uptd      Uptd     @relation(fields: [uptd_id], references: [id])
   RuasJalan RuasJalan[]
 }
 
 model Uptd {
   id          Int         @id @default(autoincrement())
   name        String      @unique
-  alamat      String
-  lat         Float
-  long        Float
+  alamat      String?     
+  lat         Float?
+  long        Float?
   RuasJalan   RuasJalan[]
+  Sup         Sup[]
 }

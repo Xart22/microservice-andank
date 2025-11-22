@@ -3,7 +3,7 @@ import type { FastifyReply, FastifyRequest } from "fastify";
 
 export function requireRoles(roles: string[]) {
   return async function (request: FastifyRequest, reply: FastifyReply) {
-    const user = request.user; // diisi oleh jwtVerify di authenticate
+    const user = request.user;
 
     if (!user || !user.role_name) {
       return reply.code(403).send({ message: "Forbidden" });
