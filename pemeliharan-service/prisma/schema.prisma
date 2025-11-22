@@ -1,0 +1,75 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum StatusPenanganan {
+  Survei
+  Direncanakan
+  Sudah_Ditangani
+  Belum_Ditangani
+}
+
+model Sapulobang {
+  id              Int       @id @default(autoincrement())
+  tanggal_survei  DateTime
+  jumlah          Int
+  panjang         Float
+  lat_survei      Float
+  long_survei     Float
+  ruas_jalan_id   Int
+  sup_id          Int
+  uptd_id         Int
+  kota_id         Int
+  lajur           String
+  lokasi_km   String
+  lokasi_m     String
+  status_penanganan StatusPenanganan @default(Survei)
+  keterangan_survei String
+  keterangan_penanganan String?
+  kategori_kedalaman String
+  tanggal_perencanaan DateTime?
+  tanggal_penanganan DateTime?
+  lat_penanganan Float?
+  long_penanganan Float?
+  image_survei  String
+  image_penanganan String?
+  created_by      Int
+  updated_by      Int?
+  penangan_by    Int?
+  created_at      DateTime  @default(now())
+  updated_at      DateTime  @updatedAt
+}
+
+model KegiatanRutin {
+  id              Int       @id @default(autoincrement())
+  tanggal DateTime
+  jenis_kegiatan String
+  deskripsi       String
+  ruas_jalan_id   Int
+  sup_id          Int
+  uptd_id         Int
+  kota_id         Int
+  lokasi_km      String
+  lokasi_m       String
+  image_0 String
+  image_50 String?
+  image_100 String?
+  image_pekerja String
+  video String?
+  created_by      Int
+  updated_by      Int?
+  created_at      DateTime  @default(now())
+  updated_at      DateTime  @updatedAt
+}
+

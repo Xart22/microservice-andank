@@ -1,0 +1,50 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+
+enum StatusLaporan {
+  Baru
+  Diproses
+  Selesai
+  Ditolak
+}
+
+
+model LaporanMasyarakat {
+  id                Int       @id @default(autoincrement())
+  no_tiket          String    @unique
+  nama              String
+  nik               String
+  alamat            String
+  no_telp           String
+  email             String
+  isi_laporan       String
+  foto              String
+  ruas_jalan_id     Int
+  latitude         Float
+  longitude        Float
+  status_laporan   StatusLaporan @default(Baru)
+  created_at        DateTime  @default(now())
+  updated_at        DateTime  @updatedAt
+  updated_by        Int?
+}
+
+model ResponLaporan {
+  id              Int       @id @default(autoincrement())
+  laporan_id      Int
+  responder_id    Int
+  tanggapan       String
+  created_at      DateTime  @default(now())
+}
