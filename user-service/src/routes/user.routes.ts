@@ -7,24 +7,53 @@ import {
   createUserSchema,
   updateUserSchema,
 } from "../modules/user/user.schema";
+import { requireRoles } from "../middleware/requireRoles";
 
 export default async function userRoutes(fastify: FastifyInstance) {
   const userService = new UserService(fastify.prisma);
   const userController = new UserController(userService);
 
-  fastify.get("/", userController.getUsers);
+  fastify.get(
+    "/",
+    {
+      preHandler: [fastify.authenticate, requireRoles(["SUPERADMIN", "ADMIN"])],
+    },
+    userController.getUsers
+  );
 
-  fastify.get("/:id", userController.getUserById);
+  fastify.get(
+    "/:id",
+    {
+      preHandler: [fastify.authenticate],
+    },
+    userController.getUserById
+  );
 
-  fastify.post("/", { schema: createUserSchema }, userController.createUser);
+  fastify.post(
+    "/",
+    {
+      preHandler: [fastify.authenticate, requireRoles(["SUPERADMIN", "ADMIN"])],
+      schema: createUserSchema,
+    },
+    userController.createUser
+  );
 
   fastify.patch(
     "/:id",
-    { schema: updateUserSchema },
+    {
+      preHandler: [fastify.authenticate],
+      schema: updateUserSchema,
+    },
     userController.updateUser
   );
 
-  fastify.delete("/:id", userController.deleteUser);
+  fastify.delete(
+    "/:id",
+    {
+      preHandler: [fastify.authenticate, requireRoles(["SUPERADMIN", "ADMIN"])],
+    },
+    userController.deleteUser
+  );
 
   fastify.get("/generate-test-users", userController.generateTestUsers);
 }

@@ -1,33 +1,19 @@
-// src/modules/user/user.service.ts
-
-import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
+import { PrismaClient } from "../../generated/prisma/client";
 
 export class UserService {
-  prisma: PrismaClient;
-
-  constructor(prisma: PrismaClient) {
-    this.prisma = prisma;
-  }
+  constructor(private prisma: PrismaClient) {}
 
   getAllUsers() {
     return this.prisma.user.findMany({
-      include: {
-        role: true,
-        sup: true,
-        uptd: true,
-      },
+      include: { role: true },
     });
   }
 
   getUserById(id: number) {
     return this.prisma.user.findUnique({
       where: { id },
-      include: {
-        role: true,
-        sup: true,
-        uptd: true,
-      },
+      include: { role: true },
     });
   }
 
@@ -40,15 +26,35 @@ export class UserService {
       throw new Error("Email already exists");
     }
 
+    const hashed = await bcrypt.hash(data.password, 10);
+
     return this.prisma.user.create({
-      data,
+      data: {
+        name: data.name,
+        email: data.email,
+        password: hashed,
+        role_id: data.role_id,
+        sup_id: data.sup_id ?? null,
+        uptd_id: data.uptd_id ?? null,
+      },
+    });
+  }
+
+  async findByEmail(email: string) {
+    return this.prisma.user.findUnique({
+      where: { email },
+      include: { role: true },
     });
   }
 
   updateUser(id: number, data: any) {
+    const updateData: any = { ...data };
+    if (data.password) {
+      updateData.password = bcrypt.hashSync(data.password, 10);
+    }
     return this.prisma.user.update({
       where: { id },
-      data,
+      data: updateData,
     });
   }
 
@@ -57,30 +63,31 @@ export class UserService {
       where: { id },
     });
   }
-  async generateTestUsers() {
-    const testUsers = [];
-    for (let i = 1; i <= 10; i++) {
-      const email = `testuser${i}@example.com`;
-      const password = await bcrypt.hash("password123", 10);
 
-      const user = await this.prisma.user.create({
-        data: {
-          name: `Test User ${i}`,
-          email,
-          password,
-          role: {
-            connect: { id: 1 }, // Replace with actual role ID
-          },
-          sup: {
-            connect: { id: 1 }, // Replace with actual sup ID
-          },
-          uptd: {
-            connect: { id: 1 }, // Replace with actual uptd ID
-          },
-        },
-      });
-      testUsers.push(user);
+  async generateTestUsers() {
+    const testUsers = [
+      {
+        name: "Test User 1",
+        email: "test1@example.com",
+        password: "password1",
+        role_id: 1,
+        uptd_id: 1,
+      },
+      {
+        name: "Test User 2",
+        email: "test2@example.com",
+        password: "password2",
+        role_id: 1,
+        uptd_id: 2,
+      },
+    ];
+
+    const createdUsers = [];
+    for (const user of testUsers) {
+      const createdUser = await this.createUser(user);
+      createdUsers.push(createdUser);
     }
-    return testUsers;
+
+    return createdUsers;
   }
 }

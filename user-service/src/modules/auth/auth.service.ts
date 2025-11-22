@@ -1,20 +1,14 @@
-import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
+import { PrismaClient } from "../../generated/prisma/client";
 
 export class AuthService {
-  prisma: PrismaClient;
-
-  constructor(prisma: PrismaClient) {
-    this.prisma = prisma;
-  }
+  constructor(private prisma: PrismaClient) {}
 
   async validateUser(email: string, password: string) {
     const user = await this.prisma.user.findUnique({
       where: { email },
       include: {
-        role: true,
-        sup: true,
-        uptd: true,
+        role: true, // ⬅ penting, biar dapet user.role.name
       },
     });
 
@@ -24,11 +18,5 @@ export class AuthService {
     if (!isMatch) return null;
 
     return user;
-  }
-
-  async findByEmail(email: string) {
-    return this.prisma.user.findUnique({
-      where: { email },
-    });
   }
 }

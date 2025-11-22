@@ -7,11 +7,7 @@ type LoginBody = {
 };
 
 export class AuthController {
-  authService: AuthService;
-
-  constructor(authService: AuthService) {
-    this.authService = authService;
-  }
+  constructor(private authService: AuthService) {}
 
   login = async (req: FastifyRequest, reply: FastifyReply) => {
     const { email, password } = req.body as LoginBody;
@@ -21,13 +17,13 @@ export class AuthController {
       return reply.code(401).send({ message: "Invalid credentials" });
     }
 
-    // payload token – include info yang sering dipakai di service lain
     const token = await reply.jwtSign({
       sub: user.id,
       email: user.email,
       role_id: user.role_id,
-      sup_id: user.sup_id,
-      uptd_id: user.uptd_id,
+      role_name: user.role?.name ?? null,
+      sup_id: user.sup_id ?? null,
+      uptd_id: user.uptd_id ?? null,
     });
 
     return reply.send({

@@ -1,16 +1,19 @@
 // src/middlewares/requireRoles.ts
 import type { FastifyReply, FastifyRequest } from "fastify";
 
-export function requireRoles(roles: number[]) {
+export function requireRoles(roles: string[]) {
   return async function (request: FastifyRequest, reply: FastifyReply) {
-    // pastikan token sudah diverifikasi dulu
-    // biasanya middleware ini dipasang setelah fastify.authenticate
+    const user = request.user; // diisi oleh jwtVerify di authenticate
 
-    const user = (request as any).user as {
-      role_id: number;
-    };
+    if (!user || !user.role_name) {
+      return reply.code(403).send({ message: "Forbidden" });
+    }
 
-    if (!user || !roles.includes(user.role_id)) {
+    // case-insensitive biar aman
+    const currentRole = user.role_name.toUpperCase();
+    const allowedRoles = roles.map((r) => r.toUpperCase());
+
+    if (!allowedRoles.includes(currentRole)) {
       return reply.code(403).send({ message: "Forbidden" });
     }
   };
