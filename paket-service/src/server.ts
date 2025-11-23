@@ -3,7 +3,10 @@ import prismaPlugin from "./plugins/prisma";
 import fastifyJwt from "@fastify/jwt";
 import { ensureUploadDir } from "./helper/utils";
 import fastifyMultipart from "@fastify/multipart";
-import { dataumRoutes } from "./routes/data-umum.routes";
+import dataUmumRoutes from "./routes/data-umum.routes";
+import jadualRoutes from "./routes/jadual.routes";
+import laporanMingguanRoutes from "./routes/laporan-mingguan.routes";
+import dataUmumFileRoutes from "./routes/data-umum-file.routes";
 
 async function buildServer() {
   const fastify = Fastify({
@@ -38,7 +41,10 @@ async function buildServer() {
   });
 
   // register routes
-  fastify.register(dataumRoutes, { prefix: "/data-umum" });
+  fastify.register(dataUmumRoutes, { prefix: "/data-umum" });
+  fastify.register(jadualRoutes, { prefix: "/jadual" });
+  fastify.register(laporanMingguanRoutes, { prefix: "/laporan-mingguan" });
+  fastify.register(dataUmumFileRoutes, { prefix: "/data-umum-file" });
 
   return fastify;
 }
@@ -47,8 +53,8 @@ async function start() {
   const fastify = await buildServer();
 
   try {
-    await fastify.listen({ port: 3004, host: "0.0.0.0" });
-    console.log("Pemeliharan service running on http://localhost:3004");
+    await fastify.listen({ port: 3003, host: "0.0.0.0" });
+    console.log("Pemeliharan service running on http://localhost:3003");
   } catch (err) {
     fastify.log.error(err);
     process.exit(1);
@@ -56,8 +62,6 @@ async function start() {
 }
 
 start();
-
-// Type augmentation untuk JWT & authenticate
 
 declare module "@fastify/jwt" {
   interface FastifyJWT {

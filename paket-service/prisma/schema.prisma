@@ -1,12 +1,6 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
-generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+generator client { 
+  provider = "prisma-client" 
+  output = "../generated/prisma" 
 }
 
 datasource db {
@@ -14,168 +8,165 @@ datasource db {
 }
 
 model UserRole {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
   description String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   userDetails UserDetail[]
 }
 
 model UserDetail {
-  user_id Int @id
-  role_id Int
-  is_active Boolean @default(true)
+  user_id   Int @id
+  role_id   Int
+  is_active Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
   user_role UserRole @relation(fields: [role_id], references: [id])
 }
 
 model DataUmum {
-  id        Int          @id @default(autoincrement())
-  pemda     String
-  opd       String
-  nm_paket   String
-  no_kontrak String
-  tgl_kontrak DateTime @db.Date
-  no_spmk   String
-  tgl_spmk   DateTime @db.Date
+  id             Int      @id @default(autoincrement())
+  pemda          String
+  opd            String
+  nm_paket       String
+  no_kontrak     String
+  tgl_kontrak    DateTime @db.Date
+  no_spmk        String
+  tgl_spmk       DateTime @db.Date
   kategori_paket String
-  uptd_id  Int
-  ppk_kegiatan String
-  thn Int
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt 
-  
+  uptd_id        Int
+  ppk_kegiatan   String
+  thn            Int
+  created_at     DateTime @default(now())
+  updated_at     DateTime @updatedAt 
 
-  dataUmumDetails DataUmumDetail?
-
-  laporanMingguans LaporanMingguan[]
-
-  fileDokumens FileDokumen[]
+  detail            DataUmumDetail[]
+  laporanMingguans  LaporanMingguan[]
+  fileDokumens      FileDokumen[]
 }
 
 model DataUmumDetail {
-  id        Int      @id @default(autoincrement())
-  data_umum_id String 
-  tgl_adendum DateTime? @db.Date
-  nilai_kontrak String
-  panjang_km Float
-  lama_waktu Int
-  kontraktor_id Int
-  konsultan_id Int
-  ppk_id Int
-  is_active Boolean @default(true)
-  keterangan String?
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  id             Int      @id @default(autoincrement())
+  data_umum_id   Int  
+  tgl_adendum    DateTime? @db.Date
+  nilai_kontrak  String
+  panjang_km     Float
+  lama_waktu     Int
+  kontraktor_id  Int
+  konsultan_id   Int
+  ppk_id         Int
+  is_active      Boolean @default(true)
+  keterangan     String?
+  created_at     DateTime @default(now())
+  updated_at     DateTime @updatedAt
 
-  data_umum DataUmum @relation(fields: [data_umum_id], references: [id])
-  dataUmumRuas DataUmumRuas[]
-  jaduals Jadual[]
-  kontraktor Kontraktor @relation(fields: [kontraktor_id], references: [id])
-  konsultan Konsultan @relation(fields: [konsultan_id], references: [id])
+  data_umum      DataUmum      @relation(fields: [data_umum_id], references: [id])
+  dataUmumRuas   DataUmumRuas[]
+  jaduals        Jadual[]
 
+  kontraktor     Kontraktor    @relation(fields: [kontraktor_id], references: [id])
+  konsultan      Konsultan     @relation(fields: [konsultan_id], references: [id])
 }
-
 
 model DataUmumRuas {
-  id        Int      @id @default(autoincrement())
+  id                  Int      @id @default(autoincrement())
   data_umum_detail_id Int 
-  ruas_id Int
-  segment_jalan String
-  lat_awal Float
-  long_awal Float
-  lat_akhir Float
-  long_akhir Float
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  ruas_id             Int
+  segment_jalan       String
+  lat_awal            Float
+  long_awal           Float
+  lat_akhir           Float
+  long_akhir          Float
+  created_at          DateTime @default(now())
+  updated_at          DateTime @updatedAt
 
-  data_umum_detail DataUmumDetail @relation(fields: [data_umum_detail_id], references: [id])
+  data_umum_detail    DataUmumDetail @relation(fields: [data_umum_detail_id], references: [id])
 }
-
 
 model Kontraktor {
-  id        Int      @id @default(autoincrement())
-  nama      String   @unique
-  alamat    String
-  npwp      String   @unique
-  nama_direktur String
-  email    String   @unique
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-}
+  id             Int      @id @default(autoincrement())
+  nama           String   @unique
+  alamat         String
+  npwp           String   @unique
+  nama_direktur  String
+  email          String   @unique
+  created_at     DateTime @default(now())
+  updated_at     DateTime @updatedAt
 
+  dataUmumDetails DataUmumDetail[]
+}
 
 model Konsultan {
-  id        Int      @id @default(autoincrement())
-  nama      String   @unique
-  alamat    String
-  npwp      String   @unique
-  nama_direktur String
-  email    String   @unique
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  id             Int      @id @default(autoincrement())
+  nama           String   @unique
+  alamat         String
+  npwp           String   @unique
+  nama_direktur  String
+  email          String   @unique
+  created_at     DateTime @default(now())
+  updated_at     DateTime @updatedAt
+
+  dataUmumDetails DataUmumDetail[]
 }
 
-model Jadual{
-  id        Int      @id @default(autoincrement())
+model Jadual {
+  id                  Int      @id @default(autoincrement())
   data_umum_detail_id Int
-  nmp String
-  uraian_pekerjaan String
-  total_harga String
-  total_volume String
-  satuan String
-  bobot Float
-  koefisien Int
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-  data_umum_detail DataUmumDetail @relation(fields: [data_umum_detail_id], references: [id])
+  nmp                 String
+  uraian_pekerjaan    String
+  total_harga         String
+  total_volume        String
+  satuan              String
+  bobot               Float
+  koefisien           Int
+  created_at          DateTime @default(now())
+  updated_at          DateTime @updatedAt
 
-  jadualDetails JadualDetail[]
+  data_umum_detail    DataUmumDetail @relation(fields: [data_umum_detail_id], references: [id])
+  jadualDetails       JadualDetail[]
 }
 
-model JadualDetail{
-  id        Int      @id @default(autoincrement())
-  jadual_id Int
+model JadualDetail {
+  id               Int      @id @default(autoincrement())
+  jadual_id        Int
   uraian_pekerjaan String
-  volume String
-  satuan String
-  harga_satuan String
-  total_harga String
-  tanggal DateTime
-  nilai String
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-  jadual Jadual @relation(fields: [jadual_id], references: [id])
+  volume           String
+  satuan           String
+  harga_satuan     String
+  total_harga      String
+  tanggal          DateTime
+  nilai            String
+  created_at       DateTime @default(now())
+  updated_at       DateTime @updatedAt
+
+  jadual           Jadual @relation(fields: [jadual_id], references: [id])
 }
 
-
-model LaporanMingguan{
-  id        Int      @id @default(autoincrement())
-  data_umum_id String
-  rencana_pekerjaan String
+model LaporanMingguan {
+  id                 Int      @id @default(autoincrement())
+  data_umum_id       Int
+  rencana_pekerjaan  String
   realisasi_pekerjaan String
-  deviasi String
-  priode String
-  file_laporan String
-  keterangan String?
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  deviasi            String
+  priode             String
+  file_laporan       String
+  keterangan         String?
+  created_at         DateTime @default(now())
+  updated_at         DateTime @updatedAt
 
-
-  data_umum DataUmum @relation(fields: [data_umum_id], references: [id])
+  data_umum          DataUmum @relation(fields: [data_umum_id], references: [id])
 }
 
-
-model FileDokumen{
-  id        Int      @id @default(autoincrement())
-  data_umum_id String
+model FileDokumen {
+  id           Int      @id @default(autoincrement())
+  data_umum_id Int
   nama_dokumen String
-  file_path String
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  file_path    String
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
 
-  data_umum DataUmum @relation(fields: [data_umum_id], references: [id])
+  data_umum    DataUmum @relation(fields: [data_umum_id], references: [id])
 }

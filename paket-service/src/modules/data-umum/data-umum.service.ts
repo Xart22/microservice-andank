@@ -1,124 +1,209 @@
 import { Prisma, PrismaClient } from "../../../generated/prisma/client";
 
+type DataUmumDetailCreateWithoutFK = Omit<
+  Prisma.DataUmumDetailUncheckedCreateInput,
+  "data_umum_id"
+>;
+
+type DataUmumRuasCreateWithoutFK = Omit<
+  Prisma.DataUmumRuasUncheckedCreateInput,
+  "data_umum_detail_id"
+>;
+
 export class DataUmumService {
   constructor(private prisma: PrismaClient) {}
 
-  getDataUmum() {
+  async createDataUmum(
+    header: Prisma.DataUmumUncheckedCreateInput,
+    detail: DataUmumDetailCreateWithoutFK,
+    ruasList: DataUmumRuasCreateWithoutFK[]
+  ) {
+    return this.prisma.$transaction(async (tx) => {
+      const createdHeader = await tx.dataUmum.create({
+        data: header,
+      });
+
+      const createdDetail = await tx.dataUmumDetail.create({
+        data: {
+          ...detail,
+          data_umum_id: createdHeader.id,
+        },
+      });
+
+      if (ruasList.length > 0) {
+        await tx.dataUmumRuas.createMany({
+          data: ruasList.map((ruas) => ({
+            ...ruas,
+            data_umum_detail_id: createdDetail.id,
+          })),
+        });
+      }
+
+      const result = await tx.dataUmum.findUnique({
+        where: { id: createdHeader.id },
+        include: {
+          detail: {
+            include: {
+              dataUmumRuas: true,
+            },
+          },
+          laporanMingguans: true,
+          fileDokumens: true,
+        },
+      });
+
+      return result;
+    });
+  }
+
+  getAllDataUmum() {
     return this.prisma.dataUmum.findMany({
       include: {
-        dataUmumDetails: true,
+        detail: {
+          include: {
+            dataUmumRuas: true,
+          },
+        },
         laporanMingguans: true,
         fileDokumens: true,
       },
     });
   }
 
-  getDataUmumById(id: string) {
+  getDataUmumById(id: number) {
     return this.prisma.dataUmum.findUnique({
       where: { id },
       include: {
-        dataUmumDetails: true,
+        detail: {
+          include: {
+            dataUmumRuas: true,
+          },
+        },
         laporanMingguans: true,
         fileDokumens: true,
       },
     });
   }
 
-  async createDataUmum(
-    dataUmum: Prisma.DataUmumUncheckedCreateInput,
-    dataUmumDetail: Prisma.DataUmumDetailUncheckedCreateInput[],
-    dataUmumRuas: Prisma.DataUmumRuasUncheckedCreateInput[]
+  // update data umum
+  updateDataUmum(
+    id: number,
+    header: Prisma.DataUmumUncheckedCreateInput,
+    detail: DataUmumDetailCreateWithoutFK,
+    ruasList: DataUmumRuasCreateWithoutFK[]
   ) {
     return this.prisma.$transaction(async (tx) => {
-      // 1. buat header dataUmum
-      const createdDataUmum = await tx.dataUmum.create({
-        data: dataUmum,
+      const updatedHeader = await tx.dataUmum.update({
+        where: { id },
+        data: header,
       });
-
-      const dataUmumId = createdDataUmum.id;
-
-      await tx.dataUmumDetail.create({
-        data: {
-          ...dataUmumDetail[0],
-          data_umum_id: dataUmumId,
-        },
+      const existingDetail = await tx.dataUmumDetail.findFirst({
+        where: { data_umum_id: id },
       });
-
-      const dataUmumDetailId = await tx.dataUmumDetail.findFirst({
-        where: {
-          data_umum_id: dataUmumId,
-        },
-      });
-
-      if (!dataUmumDetailId?.id) {
-        throw new Error("Failed to create data umum detail");
+      if (existingDetail) {
+        await tx.dataUmumDetail.update({
+          where: { id: existingDetail.id },
+          data: {
+            ...detail,
+          },
+        });
+        await tx.dataUmumRuas.deleteMany({
+          where: { data_umum_detail_id: existingDetail.id },
+        });
+        if (ruasList.length > 0) {
+          await tx.dataUmumRuas.createMany({
+            data: ruasList.map((ruas) => ({
+              ...ruas,
+              data_umum_detail_id: existingDetail.id,
+            })),
+          });
+        }
+      } else {
+        const createdDetail = await tx.dataUmumDetail.create({
+          data: {
+            ...detail,
+            data_umum_id: updatedHeader.id,
+          },
+        });
+        if (ruasList.length > 0) {
+          await tx.dataUmumRuas.createMany({
+            data: ruasList.map((ruas) => ({
+              ...ruas,
+              data_umum_detail_id: createdDetail.id,
+            })),
+          });
+        }
       }
 
-      const { id, ...ruasDataWithoutId } = dataUmumRuas[0];
-      await tx.dataUmumRuas.create({
-        data: {
-          ...ruasDataWithoutId,
-          data_umum_detail_id: dataUmumDetailId.id,
-        },
-      });
-
-      const dataUmumWithDetail = await this.prisma.dataUmum.findUnique({
-        where: { id: dataUmumId },
+      const result = await tx.dataUmum.findUnique({
+        where: { id: updatedHeader.id },
         include: {
-          dataUmumDetails: true,
+          detail: {
+            include: {
+              dataUmumRuas: true,
+            },
+          },
+          laporanMingguans: true,
+          fileDokumens: true,
         },
       });
-      const ruasWithDetail = await this.prisma.dataUmumRuas.findMany({
-        where: {
-          data_umum_detail_id: dataUmumDetailId.id,
-        },
-      });
-      //merge hasil
-      return {
-        ...createdDataUmum,
-        dataUmumDetails: dataUmumWithDetail?.dataUmumDetails || [],
-        dataUmumRuas: ruasWithDetail,
-      };
-    });
-  }
-  updateDataUmum(id: string, data: Prisma.DataUmumUncheckedUpdateInput) {
-    return this.prisma.dataUmum.update({
-      where: { id },
-      data,
+      return result;
     });
   }
 
-  deleteDataUmum(id: string) {
+  deleteDataUmum(id: number) {
     return this.prisma.dataUmum.delete({
       where: { id },
     });
   }
 
-  createDataUmumWithDetails(
-    dataUmumData: Prisma.DataUmumUncheckedCreateInput,
-    detailsData: Prisma.DataUmumDetailUncheckedCreateInput[],
-    dataUmumRuas: Prisma.DataUmumRuasUncheckedCreateInput[]
+  createAdendum(
+    id: number,
+    detail: DataUmumDetailCreateWithoutFK,
+    ruasList: DataUmumRuasCreateWithoutFK[]
   ) {
-    return this.prisma.$transaction(async (prisma) => {
-      const createdDataUmum = await prisma.dataUmum.create({
-        data: dataUmumData,
+    return this.prisma.$transaction(async (tx) => {
+      const existingHeader = await tx.dataUmum.findUnique({
+        where: { id },
       });
-      const dataUmumId = createdDataUmum.id;
-      const detailsWithDataUmumId = detailsData.map((detail) => ({
-        ...detail,
-        dataUmumId,
-      }));
-      const ruasWithDataUmumId = dataUmumRuas.map((ruas) => ({
-        ...ruas,
-        dataUmumId,
-      }));
-      await prisma.dataUmumDetail.createMany({
-        data: detailsWithDataUmumId,
+      if (!existingHeader) {
+        throw new Error("Data Umum not found");
+      }
+      //set not active to existing detail
+      await tx.dataUmumDetail.updateMany({
+        where: { data_umum_id: id, is_active: true },
+        data: { is_active: false },
       });
-      await prisma.dataUmumRuas.createMany({
-        data: ruasWithDataUmumId,
+      const createdDetail = await tx.dataUmumDetail.create({
+        data: {
+          ...detail,
+          data_umum_id: id,
+        },
       });
-      return createdDataUmum;
+      if (ruasList.length > 0) {
+        await tx.dataUmumRuas.createMany({
+          data: ruasList.map((ruas) => ({
+            ...ruas,
+            data_umum_detail_id: createdDetail.id,
+          })),
+        });
+      }
+      return createdDetail;
+    });
+  }
+
+  getDataUmumByAuth(uptdId: number) {
+    return this.prisma.dataUmum.findMany({
+      where: { uptd_id: uptdId },
+      include: {
+        detail: {
+          include: {
+            dataUmumRuas: true,
+          },
+        },
+        laporanMingguans: true,
+        fileDokumens: true,
+      },
     });
   }
 }

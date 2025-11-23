@@ -1,113 +1,203 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { DataUmumService } from "./data-umum.service";
-
-import {
-  DataUmumDetailCreateInput,
-  DataUmumDetailUncheckedCreateInput,
-  DataUmumRuasCreateInput,
-  DataUmumRuasUncheckedCreateInput,
-  DataUmumUncheckedCreateInput,
-  DataUmumUncheckedUpdateInput,
-} from "../../../generated/prisma/models";
-import { DataUmumRuas } from "../../../generated/prisma/client";
+import { Prisma } from "../../../generated/prisma/client";
 import { CreateDataUmumBody } from "../../types/dataUmum";
 
 export class DataUmumController {
   constructor(private dataUmumService: DataUmumService) {}
 
   getDataUmum = async (request: FastifyRequest, reply: FastifyReply) => {
-    const data = await this.dataUmumService.getDataUmum();
-    reply.send(data);
-  };
-
-  getDataUmumById = async (
-    request: FastifyRequest<{ Params: { id: string } }>,
-    reply: FastifyReply
-  ) => {
-    const { id } = request.params;
-    const data = await this.dataUmumService.getDataUmumById(id);
-    reply.send(data);
+    const dataUmumId = await this.dataUmumService.getAllDataUmum();
+    return reply.code(200).send(dataUmumId);
   };
 
   createDataUmum = async (request: FastifyRequest, reply: FastifyReply) => {
     const body = request.body as CreateDataUmumBody;
 
-    const { dataUmumDetail, dataUmumRuas, ...header } = body;
+    const { dataUmumDetail, dataUmumRuas, ...headerFields } = body;
 
-    // convert tanggal (kalau di Prisma field-nya DateTime)
-    const tglKontrak = new Date(header.tgl_kontrak);
-    const tglSpmk = new Date(header.tgl_spmk);
-    const lamaWaktu = Number(dataUmumDetail.lama_waktu);
-
-    // siapkan data untuk header (DataUmum)
-    const dataUmumData: DataUmumUncheckedCreateInput = {
-      pemda: header.pemda,
-      opd: header.opd,
-      nm_paket: header.nm_paket,
-      no_kontrak: header.no_kontrak,
-      tgl_kontrak: tglKontrak,
-      no_spmk: header.no_spmk,
-      tgl_spmk: tglSpmk,
-      kategori_paket: header.kategori_paket,
-      uptd_id: header.uptd_id,
-      ppk_kegiatan: header.ppk_kegiatan,
-      thn: header.thn,
-      // kalau ada field lain di model DataUmum, tambahkan di sini
+    // --- Header (DataUmum) ---
+    const headerData: Prisma.DataUmumUncheckedCreateInput = {
+      pemda: headerFields.pemda,
+      opd: headerFields.opd,
+      nm_paket: headerFields.nm_paket,
+      no_kontrak: headerFields.no_kontrak,
+      tgl_kontrak: new Date(headerFields.tgl_kontrak),
+      no_spmk: headerFields.no_spmk,
+      tgl_spmk: new Date(headerFields.tgl_spmk),
+      kategori_paket: headerFields.kategori_paket,
+      uptd_id: headerFields.uptd_id,
+      ppk_kegiatan: headerFields.ppk_kegiatan,
+      thn: headerFields.thn,
     };
 
-    // detail (anggap di Prisma field-nya nilai_kontrak: Decimal/BigInt/Int)
-    const dataUmumDetailData: DataUmumDetailUncheckedCreateInput[] = [
-      {
-        nilai_kontrak: dataUmumDetail.nilai_kontrak,
-        panjang_km: dataUmumDetail.panjang_km,
-        lama_waktu: lamaWaktu,
-        kontraktor_id: dataUmumDetail.kontraktor_id,
-        konsultan_id: dataUmumDetail.konsultan_id,
-        ppk_id: dataUmumDetail.ppk_id,
-        data_umum_id: "",
-      },
-    ];
+    // --- Detail (DataUmumDetail) ---
+    const detailData: Omit<
+      Prisma.DataUmumDetailUncheckedCreateInput,
+      "data_umum_id"
+    > = {
+      tgl_adendum: dataUmumDetail.tgl_adendum
+        ? new Date(dataUmumDetail.tgl_adendum)
+        : null,
+      nilai_kontrak: dataUmumDetail.nilai_kontrak.toString(),
+      panjang_km: Number(dataUmumDetail.panjang_km),
+      lama_waktu: Number(dataUmumDetail.lama_waktu),
+      kontraktor_id: dataUmumDetail.kontraktor_id,
+      konsultan_id: dataUmumDetail.konsultan_id,
+      ppk_id: dataUmumDetail.ppk_id,
+      is_active: true,
+      keterangan: dataUmumDetail.keterangan ?? null,
+      created_at: undefined as any,
+      updated_at: undefined as any,
+    };
 
-    // ruas
-    const dataUmumRuasData: DataUmumRuasUncheckedCreateInput[] =
-      body.dataUmumRuas.map((ruas) => ({
-        ruas_id: ruas.ruas_id,
-        segment_jalan: ruas.segment_jalan,
-        lat_awal: ruas.lat_awal,
-        long_awal: ruas.long_awal,
-        lat_akhir: ruas.lat_akhir,
-        long_akhir: ruas.long_akhir,
-        data_umum_detail_id: 0,
-      }));
+    delete (detailData as any).created_at;
+    delete (detailData as any).updated_at;
+
+    // --- Ruas (DataUmumRuas[]) ---
+    const ruasData: Omit<
+      Prisma.DataUmumRuasUncheckedCreateInput,
+      "data_umum_detail_id"
+    >[] = dataUmumRuas.map((r) => ({
+      ruas_id: r.ruas_id,
+      segment_jalan: r.segment_jalan,
+      lat_awal: r.lat_awal,
+      long_awal: r.long_awal,
+      lat_akhir: r.lat_akhir,
+      long_akhir: r.long_akhir,
+      created_at: undefined as any,
+      updated_at: undefined as any,
+    }));
+
+    ruasData.forEach((r) => {
+      delete (r as any).created_at;
+      delete (r as any).updated_at;
+    });
 
     const created = await this.dataUmumService.createDataUmum(
-      dataUmumData,
-      dataUmumDetailData,
-      dataUmumRuasData
+      headerData,
+      detailData,
+      ruasData
     );
 
     return reply.code(201).send(created);
   };
 
-  updateDataUmum = async (
-    request: FastifyRequest<{
-      Params: { id: string };
-      Body: DataUmumUncheckedUpdateInput;
-    }>,
-    reply: FastifyReply
-  ) => {
-    const { id } = request.params;
-    const data = request.body;
-    const updatedData = await this.dataUmumService.updateDataUmum(id, data);
-    reply.send(updatedData);
+  getDataUmumByAuth = async (request: FastifyRequest, reply: FastifyReply) => {
+    const user_id = request.user.uptd_id as number;
+    const dataUmum = await this.dataUmumService.getDataUmumByAuth(user_id);
+    return reply.code(200).send(dataUmum);
   };
 
-  deleteDataUmum = async (
-    request: FastifyRequest<{ Params: { id: string } }>,
+  createAdendumDataUmum = async (
+    request: FastifyRequest,
     reply: FastifyReply
   ) => {
-    const { id } = request.params;
-    const deletedData = await this.dataUmumService.deleteDataUmum(id);
-    reply.send(deletedData);
+    const dataUmumId = Number((request.params as any).id);
+    const body = request.body as CreateDataUmumBody;
+
+    const { dataUmumDetail, dataUmumRuas, ...headerFields } = body;
+    const detailData: Omit<
+      Prisma.DataUmumDetailUncheckedCreateInput,
+      "data_umum_id"
+    > = {
+      tgl_adendum: dataUmumDetail.tgl_adendum
+        ? new Date(dataUmumDetail.tgl_adendum)
+        : null,
+      nilai_kontrak: dataUmumDetail.nilai_kontrak.toString(),
+      panjang_km: Number(dataUmumDetail.panjang_km),
+      lama_waktu: Number(dataUmumDetail.lama_waktu),
+      kontraktor_id: dataUmumDetail.kontraktor_id,
+      konsultan_id: dataUmumDetail.konsultan_id,
+      ppk_id: dataUmumDetail.ppk_id,
+      is_active: true,
+      keterangan: dataUmumDetail.keterangan ?? null,
+      created_at: undefined as any,
+      updated_at: undefined as any,
+    };
+    delete (detailData as any).created_at;
+    delete (detailData as any).updated_at;
+
+    // --- Ruas (DataUmumRuas[]) ---
+    const ruasData: Omit<
+      Prisma.DataUmumRuasUncheckedCreateInput,
+      "data_umum_detail_id"
+    >[] = dataUmumRuas.map((r) => ({
+      ruas_id: r.ruas_id,
+      segment_jalan: r.segment_jalan,
+      lat_awal: r.lat_awal,
+      long_awal: r.long_awal,
+      lat_akhir: r.lat_akhir,
+      long_akhir: r.long_akhir,
+      created_at: undefined as any,
+      updated_at: undefined as any,
+    }));
+
+    ruasData.forEach((r) => {
+      delete (r as any).created_at;
+      delete (r as any).updated_at;
+    });
+
+    const createdAdendum = await this.dataUmumService.createAdendum(
+      dataUmumId,
+      detailData,
+      ruasData
+    );
+    return reply.code(201).send(createdAdendum);
+  };
+
+  updateDataUmum = async (request: FastifyRequest, reply: FastifyReply) => {
+    const dataUmumId = Number((request.params as any).id);
+    const body = request.body as CreateDataUmumBody;
+
+    const { dataUmumDetail, dataUmumRuas, ...headerFields } = body;
+    const detailData: Omit<
+      Prisma.DataUmumDetailUncheckedCreateInput,
+      "data_umum_id"
+    > = {
+      tgl_adendum: dataUmumDetail.tgl_adendum
+        ? new Date(dataUmumDetail.tgl_adendum)
+        : null,
+      nilai_kontrak: dataUmumDetail.nilai_kontrak.toString(),
+      panjang_km: Number(dataUmumDetail.panjang_km),
+      lama_waktu: Number(dataUmumDetail.lama_waktu),
+      kontraktor_id: dataUmumDetail.kontraktor_id,
+      konsultan_id: dataUmumDetail.konsultan_id,
+      ppk_id: dataUmumDetail.ppk_id,
+      is_active: true,
+      keterangan: dataUmumDetail.keterangan ?? null,
+      created_at: undefined as any,
+      updated_at: undefined as any,
+    };
+    delete (detailData as any).created_at;
+    delete (detailData as any).updated_at;
+
+    // --- Ruas (DataUmumRuas[]) ---
+    const ruasData: Omit<
+      Prisma.DataUmumRuasUncheckedCreateInput,
+      "data_umum_detail_id"
+    >[] = dataUmumRuas.map((r) => ({
+      ruas_id: r.ruas_id,
+      segment_jalan: r.segment_jalan,
+      lat_awal: r.lat_awal,
+      long_awal: r.long_awal,
+      lat_akhir: r.lat_akhir,
+      long_akhir: r.long_akhir,
+      created_at: undefined as any,
+      updated_at: undefined as any,
+    }));
+
+    ruasData.forEach((r) => {
+      delete (r as any).created_at;
+      delete (r as any).updated_at;
+    });
+
+    const updated = await this.dataUmumService.updateDataUmum(
+      dataUmumId,
+      headerFields,
+      detailData,
+      ruasData
+    );
+    return reply.code(200).send(updated);
   };
 }
