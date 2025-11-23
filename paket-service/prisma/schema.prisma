@@ -33,23 +33,23 @@ model UserDetail {
 }
 
 model DataUmum {
-  id        String   @id @default(cuid())
+  id        Int          @id @default(autoincrement())
   pemda     String
   opd       String
   nm_paket   String
   no_kontrak String
-  tgl_kontrak DateTime
+  tgl_kontrak DateTime @db.Date
   no_spmk   String
-  tgl_spmk   DateTime
+  tgl_spmk   DateTime @db.Date
   kategori_paket String
   uptd_id  Int
   ppk_kegiatan String
   thn Int
   created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  updated_at DateTime @updatedAt 
   
 
-  dataUmumDetails DataUmumDetail[]
+  dataUmumDetails DataUmumDetail?
 
   laporanMingguans LaporanMingguan[]
 
@@ -59,7 +59,7 @@ model DataUmum {
 model DataUmumDetail {
   id        Int      @id @default(autoincrement())
   data_umum_id String 
-  tgl_adendum DateTime?
+  tgl_adendum DateTime? @db.Date
   nilai_kontrak String
   panjang_km Float
   lama_waktu Int
@@ -72,10 +72,11 @@ model DataUmumDetail {
   updated_at DateTime @updatedAt
 
   data_umum DataUmum @relation(fields: [data_umum_id], references: [id])
-
   dataUmumRuas DataUmumRuas[]
-
   jaduals Jadual[]
+  kontraktor Kontraktor @relation(fields: [kontraktor_id], references: [id])
+  konsultan Konsultan @relation(fields: [konsultan_id], references: [id])
+
 }
 
 

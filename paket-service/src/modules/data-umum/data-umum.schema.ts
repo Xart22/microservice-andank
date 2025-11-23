@@ -1,0 +1,76 @@
+export const createDataUmumSchema = {
+  body: {
+    type: "object",
+    required: [
+      "pemda",
+      "opd",
+      "nm_paket",
+      "no_kontrak",
+      "tgl_kontrak",
+      "no_spmk",
+      "tgl_spmk",
+      "kategori_paket",
+      "uptd_id",
+      "ppk_kegiatan",
+      "thn",
+      "dataUmumDetail",
+      "dataUmumRuas",
+    ],
+    properties: {
+      pemda: { type: "string" },
+      opd: { type: "string" },
+      nm_paket: { type: "string" },
+      no_kontrak: { type: "string" },
+      tgl_kontrak: { type: "string", format: "date" },
+      no_spmk: { type: "string" },
+      tgl_spmk: { type: "string", format: "date" },
+      kategori_paket: { type: "string" },
+      uptd_id: { type: "number" },
+      ppk_kegiatan: { type: "string" },
+      thn: { type: "number" },
+
+      dataUmumDetail: {
+        type: "object",
+        required: [
+          "nilai_kontrak",
+          "panjang_km",
+          "lama_waktu",
+          "kontraktor_id",
+          "konsultan_id",
+          "ppk_id",
+        ],
+        properties: {
+          nilai_kontrak: { type: "string" },
+          panjang_km: { type: "number" },
+          lama_waktu: { type: "string" },
+          kontraktor_id: { type: "number" },
+          konsultan_id: { type: "number" },
+          ppk_id: { type: "number" },
+        },
+      },
+
+      dataUmumRuas: {
+        type: "array",
+        items: {
+          type: "object",
+          required: [
+            "ruas_id",
+            "segment_jalan",
+            "lat_awal",
+            "long_awal",
+            "lat_akhir",
+            "long_akhir",
+          ],
+          properties: {
+            ruas_id: { type: "number" },
+            segment_jalan: { type: "string" },
+            lat_awal: { type: "number" },
+            long_awal: { type: "number" },
+            lat_akhir: { type: "number" },
+            long_akhir: { type: "number" },
+          },
+        },
+      },
+    },
+  },
+};

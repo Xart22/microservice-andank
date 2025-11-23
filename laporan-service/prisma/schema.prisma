@@ -1,6 +1,7 @@
 
 generator client {
   provider = "prisma-client"
+  output   = "../generated/prisma"
 }
 
 datasource db {
@@ -25,18 +26,32 @@ model LaporanMasyarakat {
   alamat            String
   no_telp           String
   email             String
+  judul             String
   isi_laporan       String
   foto              String
   ruas_jalan_id     Int
   latitude         Float
   longitude        Float
   status_laporan   StatusLaporan @default(Baru)
+  jenis_laporan_id Int
+  jenis_laporan     JenisLaporan @relation(fields: [jenis_laporan_id], references: [id])
+
   created_at        DateTime  @default(now())
   updated_at        DateTime  @updatedAt
   updated_by        Int?
   
 
   responLaporans ResponLaporan[]
+  
+}
+
+model JenisLaporan {
+  id              Int       @id @default(autoincrement())
+  nama_jenis     String
+  created_at      DateTime  @default(now())
+  updated_at      DateTime  @updatedAt
+
+  laporanMasyarakats LaporanMasyarakat[]
 }
 
 model ResponLaporan {

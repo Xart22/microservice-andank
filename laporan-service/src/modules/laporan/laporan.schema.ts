@@ -1,0 +1,33 @@
+export const createLaporanSchema = {
+  body: {
+    type: "object",
+    required: [
+      "nama",
+      "email",
+      "nik",
+      "no_telp",
+      "alamat",
+      "judul",
+      "isi_laporan",
+      "foto",
+      "ruas_jalan_id",
+      "jenis_laporan_id",
+      "latitude",
+      "longitude",
+    ],
+    properties: {
+      nama: { type: "string" },
+      email: { type: "string", format: "email" },
+      nik: { type: "string" },
+      no_telp: { type: "string" },
+      alamat: { type: "string" },
+      judul: { type: "string" },
+      isi_laporan: { type: "string" },
+      foto: { type: "string" },
+      ruas_jalan_id: { type: "integer" },
+      jenis_laporan_id: { type: "integer" },
+      latitude: { type: "number" },
+      longitude: { type: "number" },
+    },
+  },
+};
