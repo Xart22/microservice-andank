@@ -1,6 +1,6 @@
 import { FastifyInstance } from "fastify";
-import { JenisLaporanController } from "../modules/jenis-laporan/jenis-laporan.controller";
-import { JenisLaporanService } from "../modules/jenis-laporan/jenis-laporan.service";
+import { JenisLaporanController } from "../modules/jenis-laporan/jenis-laporan.controller.js";
+import { JenisLaporanService } from "../modules/jenis-laporan/jenis-laporan.service.js";
 
 export async function jenisLaporanRoutes(fastify: FastifyInstance) {
   const jenisLaporanService = new JenisLaporanService(fastify.prisma);

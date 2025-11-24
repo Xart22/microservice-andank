@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { AuthService } from "./auth.service";
+import { AuthService } from "./auth.service.js";
 
 type LoginBody = {
   email: string;

@@ -1,7 +1,7 @@
 import { FastifyInstance } from "fastify";
-import { JadualService } from "../modules/jadual/jadual.service";
-import { JadualController } from "../modules/jadual/jadual.controller";
-import { createJadualSchema } from "../modules/jadual/jadual.schecma";
+import { JadualService } from "../modules/jadual/jadual.service.js";
+import { JadualController } from "../modules/jadual/jadual.controller.js";
+import { createJadualSchema } from "../modules/jadual/jadual.schecma.js";
 
 export default async function jadualRoutes(fastify: FastifyInstance) {
   const service = new JadualService(fastify.prisma);

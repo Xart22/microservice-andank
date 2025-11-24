@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { SupService } from "./sup.service";
+import { SupService } from "./sup.service.js";
 
 export class SupController {
   supService: SupService;

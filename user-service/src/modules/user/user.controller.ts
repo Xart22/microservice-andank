@@ -1,7 +1,7 @@
 // src/modules/user/user.controller.ts
 
 import { FastifyReply, FastifyRequest } from "fastify";
-import { UserService } from "./user.service";
+import { UserService } from "./user.service.js";
 
 export class UserController {
   userService: UserService;

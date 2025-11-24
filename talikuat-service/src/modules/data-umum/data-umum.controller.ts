@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { DataUmumService } from "./data-umum.service";
-import { Prisma } from "../../../generated/prisma/client";
-import { CreateDataUmumBody } from "../../types/dataUmum";
+import { DataUmumService } from "./data-umum.service.js";
+import { Prisma } from "../../generated/prisma/client.js";
+import { CreateDataUmumBody } from "../../types/dataUmum.js";
 
 export class DataUmumController {
   constructor(private dataUmumService: DataUmumService) {}

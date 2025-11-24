@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 
-import { LaporanMasyarakatService } from "./laporan.service";
+import { LaporanMasyarakatService } from "./laporan.service.js";
 
 export class LaporanController {
   laporanService: LaporanMasyarakatService;

@@ -1,10 +1,10 @@
-import Fastify, { FastifyReply, FastifyRequest } from "fastify";
-import prismaPlugin from "./plugins/prisma";
 import fastifyJwt from "@fastify/jwt";
-import { sapulobangRoutes } from "./routes/sapulobang.routes";
-import { ensureUploadDir } from "./helper/utils";
 import fastifyMultipart from "@fastify/multipart";
-import { kegiatanRutinRoutes } from "./routes/kegiatan-rutin.routes";
+import Fastify, { FastifyReply, FastifyRequest } from "fastify";
+import { ensureUploadDir } from "./helper/utils.js";
+import { kegiatanRutinRoutes } from "./routes/kegiatan-rutin.routes.js";
+import { sapulobangRoutes } from "./routes/sapulobang.routes.js";
+import prismaPlugin from "./plugins/prisma.js";
 
 async function buildServer() {
   const fastify = Fastify({

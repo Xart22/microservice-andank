@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { ResponseLaporanService } from "./response-laporan.service";
+import { ResponseLaporanService } from "./response-laporan.service.js";
 
 export class ResponseLaporanController {
   responseLaporanService: ResponseLaporanService;

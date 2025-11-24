@@ -1,5 +1,5 @@
 import { FastifyInstance } from "fastify";
-import { callService } from "../libs/httpClient";
+import { callService } from "../libs/httpClient.js";
 
 export async function pemeliharaanGatewayRoutes(fastify: FastifyInstance) {
   const pemeliharaanServiceUrl = process.env.PEMELIHARAAN_SERVICE_URL!;

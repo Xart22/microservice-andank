@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import { PrismaClient } from "../../../generated/prisma/client";
+import { PrismaClient } from "../../generated/prisma/client.js";
 
 export class AuthService {
   constructor(private prisma: PrismaClient) {}

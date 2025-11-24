@@ -1,4 +1,4 @@
-import { PrismaClient, Prisma } from "../../../generated/prisma/client";
+import { PrismaClient, Prisma } from "../../generated/prisma/client.js";
 
 export class ResponseLaporanService {
   constructor(private prisma: PrismaClient) {}

@@ -1,7 +1,7 @@
 import { FastifyInstance } from "fastify";
 
-import { UptdController } from "../modules/uptd/uptd.controller";
-import { UptdService } from "../modules/uptd/uptd.service";
+import { UptdController } from "../modules/uptd/uptd.controller.js";
+import { UptdService } from "../modules/uptd/uptd.service.js";
 
 export async function uptdRoutes(fastify: FastifyInstance) {
   const uptdService = new UptdService(fastify.prisma);

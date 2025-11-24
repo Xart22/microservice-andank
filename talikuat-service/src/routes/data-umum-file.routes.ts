@@ -1,7 +1,7 @@
 import { FastifyInstance } from "fastify";
 
-import { DataUmumFileController } from "../modules/data-umum-file/data-umum-file.controller";
-import { DataUmumFileService } from "../modules/data-umum-file/data-umum-file.service";
+import { DataUmumFileController } from "../modules/data-umum-file/data-umum-file.controller.js";
+import { DataUmumFileService } from "../modules/data-umum-file/data-umum-file.service.js";
 
 export default async function dataUmumFileRoutes(fastify: FastifyInstance) {
   const service = new DataUmumFileService(fastify.prisma);

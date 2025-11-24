@@ -1,13 +1,13 @@
 // src/routes/user.routes.ts
 
 import { FastifyInstance } from "fastify";
-import { UserService } from "../modules/user/user.service";
-import { UserController } from "../modules/user/user.controller";
+import { UserService } from "../modules/user/user.service.js";
+import { UserController } from "../modules/user/user.controller.js";
 import {
   createUserSchema,
   updateUserSchema,
-} from "../modules/user/user.schema";
-import { requireRoles } from "../middleware/requireRoles";
+} from "../modules/user/user.schema.js";
+import { requireRoles } from "../middleware/requireRoles.js";
 
 export default async function userRoutes(fastify: FastifyInstance) {
   const userService = new UserService(fastify.prisma);

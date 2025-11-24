@@ -1,8 +1,7 @@
 import { FastifyInstance } from "fastify";
-
-import { SapulobangController } from "../modules/sapulobang/sapulubang.controller";
-import { SapulobangService } from "../modules/sapulobang/sapulobang.service";
-import { perencanaanSapulobangSchema } from "../modules/sapulobang/sapulobang.schema";
+import { perencanaanSapulobangSchema } from "../modules/sapulobang/sapulobang.schema.js";
+import { SapulobangService } from "../modules/sapulobang/sapulobang.service.js";
+import { SapulobangController } from "../modules/sapulobang/sapulubang.controller.js";
 
 export async function sapulobangRoutes(fastify: FastifyInstance) {
   const sapulobangService = new SapulobangService(fastify.prisma);

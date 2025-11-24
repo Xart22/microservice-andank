@@ -2,6 +2,7 @@ CREATE DATABASE IF NOT EXISTS user_service;
 CREATE DATABASE IF NOT EXISTS talikuat_service;
 CREATE DATABASE IF NOT EXISTS pemeliharan_service;
 CREATE DATABASE IF NOT EXISTS laporan_service;
+CREATE DATABASE IF NOT EXISTS dashboard_service;
 -- kalau gateway nggak pakai DB, tidak perlu DB sendiri
 
 -- optional: buat user selain root

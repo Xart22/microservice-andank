@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 
-import { UptdService } from "./uptd.service";
+import { UptdService } from "./uptd.service.js";
 
 export class UptdController {
   uptdService: UptdService;

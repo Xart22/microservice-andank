@@ -1,6 +1,6 @@
 import { FastifyInstance } from "fastify";
-import { LaporanMingguanService } from "../modules/laporan-mingguan/laporan-mingguan.service";
-import { LaporanMingguanController } from "../modules/laporan-mingguan/laporan-mingguan.controller";
+import { LaporanMingguanService } from "../modules/laporan-mingguan/laporan-mingguan.service.js";
+import { LaporanMingguanController } from "../modules/laporan-mingguan/laporan-mingguan.controller.js";
 
 export default async function laporanMingguanRoutes(fastify: FastifyInstance) {
   const service = new LaporanMingguanService(fastify.prisma);

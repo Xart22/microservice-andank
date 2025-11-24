@@ -1,12 +1,12 @@
 import Fastify, { FastifyReply, FastifyRequest } from "fastify";
-import prismaPlugin from "./plugins/prisma";
+import prismaPlugin from "./plugins/prisma.js";
 import fastifyJwt from "@fastify/jwt";
-import { ensureUploadDir } from "./helper/utils";
+import { ensureUploadDir } from "./helper/utils.js";
 import fastifyMultipart from "@fastify/multipart";
-import dataUmumRoutes from "./routes/data-umum.routes";
-import jadualRoutes from "./routes/jadual.routes";
-import laporanMingguanRoutes from "./routes/laporan-mingguan.routes";
-import dataUmumFileRoutes from "./routes/data-umum-file.routes";
+import dataUmumRoutes from "./routes/data-umum.routes.js";
+import jadualRoutes from "./routes/jadual.routes.js";
+import laporanMingguanRoutes from "./routes/laporan-mingguan.routes.js";
+import dataUmumFileRoutes from "./routes/data-umum-file.routes.js";
 
 async function buildServer() {
   const fastify = Fastify({

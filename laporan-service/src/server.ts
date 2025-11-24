@@ -1,9 +1,9 @@
 import Fastify, { FastifyReply, FastifyRequest } from "fastify";
-import prismaPlugin from "./plugins/prisma";
+import prismaPlugin from "./plugins/prisma.js";
 import fastifyJwt from "@fastify/jwt";
-import { laporanRoutes } from "./routes/laporan.routes";
-import { jenisLaporanRoutes } from "./routes/jenis-laporan.routes";
-import { responseLaporanRoutes } from "./routes/response-laporan.routes";
+import { laporanRoutes } from "./routes/laporan.routes.js";
+import { jenisLaporanRoutes } from "./routes/jenis-laporan.routes.js";
+import { responseLaporanRoutes } from "./routes/response-laporan.routes.js";
 
 async function buildServer() {
   const fastify = Fastify({

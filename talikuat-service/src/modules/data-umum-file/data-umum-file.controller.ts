@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 
-import { DataUmumFileService } from "./data-umum-file.service";
-import { uploadsDir } from "../../helper/utils";
+import { DataUmumFileService } from "./data-umum-file.service.js";
+import { uploadsDir } from "../../helper/utils.js";
 import path from "path";
 import { pipeline } from "stream/promises";
 import { createWriteStream, createReadStream } from "fs";

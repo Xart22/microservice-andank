@@ -1,7 +1,7 @@
 // src/routes/paket.gateway.routes.ts
 import { FastifyInstance } from "fastify";
-import { callService } from "../libs/httpClient";
-import { requireRoles } from "../middleware/requireRoles";
+import { callService } from "../libs/httpClient.js";
+import { requireRoles } from "../middleware/requireRoles.js";
 
 export default async function talikuatGatewayRoutes(fastify: FastifyInstance) {
   const paketServiceUrl = process.env.PAKET_SERVICE_URL!;

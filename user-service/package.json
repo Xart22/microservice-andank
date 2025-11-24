@@ -2,7 +2,6 @@
   "name": "user-service",
   "version": "1.0.0",
   "description": "",
-  "type": "module",
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "build": "tsc",
@@ -11,6 +10,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "type": "module",
   "dependencies": {
     "@fastify/jwt": "^10.0.0",
     "@prisma/adapter-mariadb": "^7.0.0",

@@ -1,6 +1,6 @@
 // src/routes/auth.gateway.routes.ts
 import { FastifyInstance } from "fastify";
-import { callService } from "../libs/httpClient";
+import { callService } from "../libs/httpClient.js";
 
 export default async function authGatewayRoutes(fastify: FastifyInstance) {
   const userServiceUrl = process.env.USER_SERVICE_URL!;

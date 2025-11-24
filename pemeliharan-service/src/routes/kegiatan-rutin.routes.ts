@@ -1,7 +1,6 @@
 import { FastifyInstance } from "fastify";
-
-import { KegiatanRutinController } from "../modules/kegiatan-rutin/kegiatan-rutin.controller";
-import { KegiatanRutinService } from "../modules/kegiatan-rutin/kegiatan-rutin.service";
+import { KegiatanRutinService } from "../modules/kegiatan-rutin/kegiatan-rutin.service.js";
+import { KegiatanRutinController } from "../modules/kegiatan-rutin/kegiatan-rutin.controller.js";
 
 export async function kegiatanRutinRoutes(fastify: FastifyInstance) {
   const kegiatanRutinService = new KegiatanRutinService(fastify.prisma);

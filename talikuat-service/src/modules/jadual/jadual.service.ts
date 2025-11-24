@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient } from "../../../generated/prisma/client";
+import { Prisma, PrismaClient } from "../../generated/prisma/client.js";
 
 // Supaya enak, kita buang FK dulu dari type detail
 type JadualDetailCreateWithoutFK = Omit<

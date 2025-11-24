@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { JadualService } from "./jadual.service";
-import { Prisma } from "../../../generated/prisma/client";
-import { CreateJadualBody } from "../../types/jadual";
+import { JadualService } from "./jadual.service.js";
+import { Prisma } from "../../generated/prisma/client.js";
+import { CreateJadualBody } from "../../types/jadual.js";
 
 export class JadualController {
   constructor(private jadualService: JadualService) {}

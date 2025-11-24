@@ -1,8 +1,8 @@
 import Fastify, { FastifyRequest, FastifyReply } from "fastify";
-import prismaPlugin from "./plugins/prisma";
-import userRoutes from "./routes/user.routes";
-import authRoutes from "./routes/auth.routes";
 import fastifyJwt from "@fastify/jwt";
+import prismaPlugin from "./plugins/prisma.js";
+import authRoutes from "./routes/auth.routes.js";
+import userRoutes from "./routes/user.routes.js";
 
 async function buildServer() {
   const fastify = Fastify({

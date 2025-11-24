@@ -1,8 +1,8 @@
 import { FastifyInstance } from "fastify";
 
-import { ResponseLaporanService } from "../modules/response-laporan/response-laporan.service";
-import { ResponseLaporanController } from "../modules/response-laporan/response-laporan.controller";
-import { createResponseLaporanSchema } from "../modules/response-laporan/response-laporan.schema";
+import { ResponseLaporanService } from "../modules/response-laporan/response-laporan.service.js";
+import { ResponseLaporanController } from "../modules/response-laporan/response-laporan.controller.js";
+import { createResponseLaporanSchema } from "../modules/response-laporan/response-laporan.schema.js";
 
 export async function responseLaporanRoutes(fastify: FastifyInstance) {
   const responseLaporanService = new ResponseLaporanService(fastify.prisma);

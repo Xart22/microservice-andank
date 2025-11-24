@@ -1,7 +1,7 @@
 import { FastifyInstance } from "fastify";
-import { DataUmumService } from "../modules/data-umum/data-umum.service";
-import { DataUmumController } from "../modules/data-umum/data-umum.controller";
-import { createDataUmumSchema } from "../modules/data-umum/data-umum.schema";
+import { DataUmumService } from "../modules/data-umum/data-umum.service.js";
+import { DataUmumController } from "../modules/data-umum/data-umum.controller.js";
+import { createDataUmumSchema } from "../modules/data-umum/data-umum.schema.js";
 // import { createDataUmumSchema } from '../modules/data-umum/data-umum.schema';
 
 export default async function dataUmumRoutes(fastify: FastifyInstance) {

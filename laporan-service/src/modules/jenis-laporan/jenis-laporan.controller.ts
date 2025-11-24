@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 
-import { JenisLaporanService } from "./jenis-laporan.service";
+import { JenisLaporanService } from "./jenis-laporan.service.js";
 export class JenisLaporanController {
   jenisLaporanService: JenisLaporanService;
   constructor(jenisLaporanService: JenisLaporanService) {

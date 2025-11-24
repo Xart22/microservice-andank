@@ -1,9 +1,11 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { SapulobangService } from "./sapulobang.service";
+
 import { pipeline } from "stream/promises";
 import { createWriteStream, createReadStream } from "fs";
-import { uploadsDir } from "../../helper/utils";
+
 import path from "path";
+import { SapulobangService } from "./sapulobang.service.js";
+import { uploadsDir } from "../../helper/utils.js";
 
 export class SapulobangController {
   constructor(private sapulobangService: SapulobangService) {}

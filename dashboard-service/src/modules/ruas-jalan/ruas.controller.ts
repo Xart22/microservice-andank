@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { RuasService } from "./ruas.service";
+import { RuasService } from "./ruas.service.js";
 
 export class RuasController {
   ruasService: RuasService;

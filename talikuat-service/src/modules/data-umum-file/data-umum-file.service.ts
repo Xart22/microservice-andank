@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient } from "../../../generated/prisma/client";
+import { Prisma, PrismaClient } from "../../generated/prisma/client.js";
 
 export class DataUmumFileService {
   constructor(private prisma: PrismaClient) {}

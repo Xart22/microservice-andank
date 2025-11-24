@@ -1,5 +1,5 @@
 import { FastifyInstance } from "fastify";
-import { callService } from "../libs/httpClient";
+import { callService } from "../libs/httpClient.js";
 
 export default async function laporanMasyarakatGatewayRoutes(
   fastify: FastifyInstance

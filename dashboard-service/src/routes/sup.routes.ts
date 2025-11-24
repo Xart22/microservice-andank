@@ -1,6 +1,6 @@
 import { FastifyInstance } from "fastify";
-import { SupController } from "../modules/sup/sup.controller";
-import { SupService } from "../modules/sup/sup.service";
+import { SupController } from "../modules/sup/sup.controller.js";
+import { SupService } from "../modules/sup/sup.service.js";
 
 export async function supRoutes(fastify: FastifyInstance) {
   const supService = new SupService(fastify.prisma);

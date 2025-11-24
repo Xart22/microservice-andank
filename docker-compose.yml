@@ -22,8 +22,13 @@ services:
     env_file:
       - ./user-service/.env.docker
     environment:
-      DATABASE_URL: mysql://root:Harbang@79@mysql:3306/user_service
+      DATABASE_URL: mysql://root:Harbang%4079@mysql:3306/user_service
       JWT_SECRET: super-secret-yang-sama
+      DATABASE_USER: root
+      DATABASE_PASSWORD: Harbang@79
+      DATABASE_NAME: user_service
+      DATABASE_HOST: mysql
+      DATABASE_PORT: 3306
       PORT: 3001
     depends_on:
       - mysql
@@ -39,7 +44,13 @@ services:
     env_file:
       - ./talikuat-service/.env.docker
     environment:
-      DATABASE_URL: mysql://root:Harbang@79@mysql:3306/talikuat_service
+      DATABASE_URL: mysql://root:Harbang%4079@mysql:3306/talikuat_service
+      JWT_SECRET: super-secret-yang-sama
+      DATABASE_USER: root
+      DATABASE_PASSWORD: Harbang@79
+      DATABASE_NAME: talikuat_service
+      DATABASE_HOST: mysql
+      DATABASE_PORT: 3306
       PORT: 3002
     depends_on:
       - mysql
@@ -55,7 +66,13 @@ services:
     env_file:
       - ./pemeliharan-service/.env.docker
     environment:
-      DATABASE_URL: mysql://root:Harbang@79@mysql:3306/pemeliharan_service
+      DATABASE_URL: mysql://root:Harbang%4079@mysql:3306/pemeliharan_service
+      JWT_SECRET: super-secret-yang-sama
+      DATABASE_USER: root
+      DATABASE_PASSWORD: Harbang@79
+      DATABASE_NAME: pemeliharan_service
+      DATABASE_HOST: mysql
+      DATABASE_PORT: 3306
       PORT: 3003
     depends_on:
       - mysql
@@ -71,7 +88,13 @@ services:
     env_file:
       - ./laporan-service/.env.docker
     environment:
-      DATABASE_URL: mysql://root:Harbang@79@mysql:3306/laporan_service
+      DATABASE_URL: mysql://root:Harbang%4079@mysql:3306/laporan_service
+      JWT_SECRET: super-secret-yang-sama
+      DATABASE_USER: root
+      DATABASE_PASSWORD: Harbang@79
+      DATABASE_NAME: laporan_service
+      DATABASE_HOST: mysql
+      DATABASE_PORT: 3306
       PORT: 3004
     depends_on:
       - mysql
@@ -88,6 +111,11 @@ services:
       - ./dashboard-service/.env.docker
     environment:
       PORT: 3000
+      DATABASE_USER: root
+      DATABASE_PASSWORD: Harbang@79
+      DATABASE_NAME: dashboard_service
+      DATABASE_HOST: mysql
+      DATABASE_PORT: 3306
       JWT_SECRET: super-secret-yang-sama
       USER_SERVICE_URL: http://user-service:3001
       TALIKUAT_SERVICE_URL: http://talikuat-service:3002

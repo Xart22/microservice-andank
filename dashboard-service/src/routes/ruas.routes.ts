@@ -1,7 +1,7 @@
 import { FastifyInstance } from "fastify";
-import { RuasController } from "../modules/ruas-jalan/ruas.controller";
-import { RuasService } from "../modules/ruas-jalan/ruas.service";
-import { createRuasSchema } from "../modules/ruas-jalan/ruas.schema";
+import { RuasController } from "../modules/ruas-jalan/ruas.controller.js";
+import { RuasService } from "../modules/ruas-jalan/ruas.service.js";
+import { createRuasSchema } from "../modules/ruas-jalan/ruas.schema.js";
 
 export async function ruasRoutes(fastify: FastifyInstance) {
   const ruasService = new RuasService(fastify.prisma);

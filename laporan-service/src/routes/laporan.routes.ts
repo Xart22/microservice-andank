@@ -1,7 +1,7 @@
 import { FastifyInstance } from "fastify";
-import { LaporanController } from "../modules/laporan/laporan.controller";
-import { LaporanMasyarakatService } from "../modules/laporan/laporan.service";
-import { createLaporanSchema } from "../modules/laporan/laporan.schema";
+import { LaporanController } from "../modules/laporan/laporan.controller.js";
+import { LaporanMasyarakatService } from "../modules/laporan/laporan.service.js";
+import { createLaporanSchema } from "../modules/laporan/laporan.schema.js";
 
 export async function laporanRoutes(fastify: FastifyInstance) {
   const laporanService = new LaporanMasyarakatService(fastify.prisma);

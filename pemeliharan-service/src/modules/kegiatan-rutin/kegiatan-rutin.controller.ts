@@ -1,9 +1,11 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { KegiatanRutinService } from "./kegiatan-rutin.service";
+
 import { createWriteStream } from "fs";
 import { pipeline } from "stream/promises";
 import path from "path";
-import { uploadsDir, uploadsKegiatanRutinDir } from "../../helper/utils";
+
+import { KegiatanRutinService } from "./kegiatan-rutin.service.js";
+import { uploadsKegiatanRutinDir } from "../../helper/utils.js";
 
 export class KegiatanRutinController {
   constructor(private kegiatanRutinService: KegiatanRutinService) {}

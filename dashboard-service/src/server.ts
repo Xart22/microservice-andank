@@ -1,13 +1,13 @@
 import Fastify, { FastifyReply, FastifyRequest } from "fastify";
-import prismaPlugin from "./plugins/prisma";
+import prismaPlugin from "./plugins/prisma.js";
 import fastifyJwt from "@fastify/jwt";
-import { ruasRoutes } from "./routes/ruas.routes";
-import { supRoutes } from "./routes/sup.routes";
-import { uptdRoutes } from "./routes/uptd.routes";
-import talikuatGatewayRoutes from "./routes/talikuat.gateway.route";
-import authGatewayRoutes from "./routes/auth.gateway.routes";
-import { pemeliharaanGatewayRoutes } from "./routes/pemeliharaan.gateway.routes";
-import laporanMasyarakatGatewayRoutes from "./routes/laporan-masyarakat.gateway.routes";
+import { ruasRoutes } from "./routes/ruas.routes.js";
+import { supRoutes } from "./routes/sup.routes.js";
+import { uptdRoutes } from "./routes/uptd.routes.js";
+import talikuatGatewayRoutes from "./routes/talikuat.gateway.route.js";
+import authGatewayRoutes from "./routes/auth.gateway.routes.js";
+import { pemeliharaanGatewayRoutes } from "./routes/pemeliharaan.gateway.routes.js";
+import laporanMasyarakatGatewayRoutes from "./routes/laporan-masyarakat.gateway.routes.js";
 
 async function buildServer() {
   const fastify = Fastify({

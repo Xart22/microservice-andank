@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-
-import { LaporanMingguanService } from "./laporan-mingguan.service";
+import { Prisma } from "../../generated/prisma/client.js";
+import { LaporanMingguanService } from "./laporan-mingguan.service.js";
 
 export class LaporanMingguanController {
   constructor(private laporanMingguanService: LaporanMingguanService) {}

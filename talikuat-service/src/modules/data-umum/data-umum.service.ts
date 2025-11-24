@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient } from "../../../generated/prisma/client";
+import { Prisma, PrismaClient } from "../../generated/prisma/client.js";
 
 type DataUmumDetailCreateWithoutFK = Omit<
   Prisma.DataUmumDetailUncheckedCreateInput,

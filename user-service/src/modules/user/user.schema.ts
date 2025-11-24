@@ -1,5 +1,3 @@
-// src/modules/user/user.schema.ts
-
 export const createUserSchema = {
   body: {
     type: "object",
