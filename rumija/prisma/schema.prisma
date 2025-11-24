@@ -12,3 +12,44 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+
+model RumijaKelas {
+  id               Int       @id @default(autoincrement())
+  name             String
+  kode            String
+  created_at      DateTime  @default(now())
+  updated_at      DateTime  @updatedAt
+}
+
+model RumijaType {
+  id               Int       @id @default(autoincrement())
+  name             String
+  kode            String
+  created_at      DateTime  @default(now())
+  updated_at      DateTime  @updatedAt
+}
+
+model RumihaInventaris {
+  id               Int       @id @default(autoincrement())
+  name             String
+  kode            String
+  created_at      DateTime  @default(now())
+  updated_at      DateTime  @updatedAt
+}
+
+model RumijaStatus {
+  id               Int       @id @default(autoincrement())
+  name             String
+  kode            String
+  created_at      DateTime  @default(now())
+  updated_at      DateTime  @updatedAt
+}
+
+model RumijaPelangaran {
+  id               Int       @id @default(autoincrement())
+  name             String
+  kode            String
+  created_at      DateTime  @default(now())
+  updated_at      DateTime  @updatedAt
+}

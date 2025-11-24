@@ -45,8 +45,8 @@ async function start() {
   const fastify = await buildServer();
 
   try {
-    await fastify.listen({ port: 3002, host: "0.0.0.0" });
-    console.log("LaporanMasyarakat service running on http://localhost:3002");
+    await fastify.listen({ port: 3004, host: "0.0.0.0" });
+    console.log("LaporanMasyarakat service running on http://localhost:3004");
   } catch (err) {
     fastify.log.error(err);
     process.exit(1);

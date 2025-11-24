@@ -4,6 +4,10 @@ import fastifyJwt from "@fastify/jwt";
 import { ruasRoutes } from "./routes/ruas.routes";
 import { supRoutes } from "./routes/sup.routes";
 import { uptdRoutes } from "./routes/uptd.routes";
+import talikuatGatewayRoutes from "./routes/talikuat.gateway.route";
+import authGatewayRoutes from "./routes/auth.gateway.routes";
+import { pemeliharaanGatewayRoutes } from "./routes/pemeliharaan.gateway.routes";
+import laporanMasyarakatGatewayRoutes from "./routes/laporan-masyarakat.gateway.routes";
 
 async function buildServer() {
   const fastify = Fastify({
@@ -35,6 +39,10 @@ async function buildServer() {
   fastify.register(ruasRoutes, { prefix: "/ruas" });
   fastify.register(supRoutes, { prefix: "/sup" });
   fastify.register(uptdRoutes, { prefix: "/uptd" });
+  fastify.register(talikuatGatewayRoutes, { prefix: "/gateway" });
+  fastify.register(authGatewayRoutes, { prefix: "/gateway" });
+  fastify.register(pemeliharaanGatewayRoutes, { prefix: "/gateway" });
+  fastify.register(laporanMasyarakatGatewayRoutes, { prefix: "/gateway" });
 
   return fastify;
 }
@@ -43,8 +51,8 @@ async function start() {
   const fastify = await buildServer();
 
   try {
-    await fastify.listen({ port: 3002, host: "0.0.0.0" });
-    console.log("Dashboard service running on http://localhost:3002");
+    await fastify.listen({ port: 3000, host: "0.0.0.0" });
+    console.log("Dashboard service running on http://localhost:3000");
   } catch (err) {
     fastify.log.error(err);
     process.exit(1);

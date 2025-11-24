@@ -37,7 +37,7 @@ async function buildServer() {
   );
 
   fastify.get("/health", async () => {
-    return { status: "ok", service: "pemeliharan-service" };
+    return { status: "ok", service: "talikuat-service" };
   });
 
   // register routes
@@ -54,7 +54,7 @@ async function start() {
 
   try {
     await fastify.listen({ port: 3003, host: "0.0.0.0" });
-    console.log("Pemeliharan service running on http://localhost:3003");
+    console.log("Tlikuat service running on http://localhost:3003");
   } catch (err) {
     fastify.log.error(err);
     process.exit(1);

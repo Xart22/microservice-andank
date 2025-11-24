@@ -11,8 +11,8 @@ export default async function dataUmumRoutes(fastify: FastifyInstance) {
   fastify.post(
     "/",
     {
-      schema: createDataUmumSchema, // kalau mau pakai JSON schema yang tadi kita buat
-      preHandler: [fastify.authenticate], // kalau pakai JWT
+      schema: createDataUmumSchema,
+      preHandler: [fastify.authenticate],
     },
     controller.createDataUmum
   );
