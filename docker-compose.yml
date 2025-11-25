@@ -1,10 +1,7 @@
-version: "3.9"
-
 services:
   mysql:
     image: mysql:8.0
     container_name: mysql-microservices
-    restart: always
     environment:
       MYSQL_ROOT_PASSWORD: Harbang@79
     ports:
@@ -18,7 +15,6 @@ services:
       context: ./user-service
       dockerfile: Dockerfile
     container_name: user-service
-    restart: always
     env_file:
       - ./user-service/.env.docker
     environment:
@@ -40,7 +36,6 @@ services:
       context: ./talikuat-service
       dockerfile: Dockerfile
     container_name: talikuat-service
-    restart: always
     env_file:
       - ./talikuat-service/.env.docker
     environment:
@@ -62,7 +57,6 @@ services:
       context: ./pemeliharan-service
       dockerfile: Dockerfile
     container_name: pemeliharan-service
-    restart: always
     env_file:
       - ./pemeliharan-service/.env.docker
     environment:
@@ -84,7 +78,6 @@ services:
       context: ./laporan-service
       dockerfile: Dockerfile
     container_name: laporan-service
-    restart: always
     env_file:
       - ./laporan-service/.env.docker
     environment:
@@ -101,12 +94,11 @@ services:
     ports:
       - "3004:3004"
 
-  gateway-service:
+  dashboard-service:
     build:
       context: ./dashboard-service
       dockerfile: Dockerfile
-    container_name: gateway-service
-    restart: always
+    container_name: dashboard-service
     env_file:
       - ./dashboard-service/.env.docker
     environment:
