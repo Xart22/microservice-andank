@@ -4,7 +4,7 @@ import { callService } from "../libs/httpClient.js";
 import { requireRoles } from "../middleware/requireRoles.js";
 
 export default async function talikuatGatewayRoutes(fastify: FastifyInstance) {
-  const paketServiceUrl = process.env.PAKET_SERVICE_URL!;
+  const talikuatServiceUrl = process.env.TALIKUAT_SERVICE_URL!;
 
   // Contoh: get list paket (hanya ADMIN & PPK)
   fastify.get(
@@ -17,7 +17,7 @@ export default async function talikuatGatewayRoutes(fastify: FastifyInstance) {
         const authHeader = request.headers.authorization || "";
 
         const result = await callService({
-          serviceBaseUrl: paketServiceUrl,
+          serviceBaseUrl: talikuatServiceUrl,
           path: "/paket", // sesuaikan dengan route di paket-service
           method: "GET",
           headers: {
@@ -34,7 +34,6 @@ export default async function talikuatGatewayRoutes(fastify: FastifyInstance) {
     }
   );
   //get data umum by auth
-
   fastify.get(
     "/talikuat/data-umum",
     {
@@ -45,7 +44,7 @@ export default async function talikuatGatewayRoutes(fastify: FastifyInstance) {
         const authHeader = request.headers.authorization || "";
 
         const result = await callService({
-          serviceBaseUrl: paketServiceUrl,
+          serviceBaseUrl: talikuatServiceUrl,
           path: "/data-umum",
           method: "GET",
           headers: {
@@ -71,7 +70,7 @@ export default async function talikuatGatewayRoutes(fastify: FastifyInstance) {
       try {
         const authHeader = request.headers.authorization || "";
         const result = await callService({
-          serviceBaseUrl: paketServiceUrl,
+          serviceBaseUrl: talikuatServiceUrl,
           path: "/data-umum/all",
           method: "GET",
           headers: {
@@ -98,7 +97,7 @@ export default async function talikuatGatewayRoutes(fastify: FastifyInstance) {
         const authHeader = request.headers.authorization || "";
         const body = request.body;
         const result = await callService({
-          serviceBaseUrl: paketServiceUrl,
+          serviceBaseUrl: talikuatServiceUrl,
           path: "/data-umum",
           method: "POST",
           headers: {
@@ -108,6 +107,7 @@ export default async function talikuatGatewayRoutes(fastify: FastifyInstance) {
         });
         return reply.send(result);
       } catch (err: any) {
+        console.log(err);
         reply
           .code(err.statusCode || 500)
           .send(err.body || { message: "Error" });
@@ -127,7 +127,7 @@ export default async function talikuatGatewayRoutes(fastify: FastifyInstance) {
         const { id } = request.params as { id: string };
         const body = request.body;
         const result = await callService({
-          serviceBaseUrl: paketServiceUrl,
+          serviceBaseUrl: talikuatServiceUrl,
           path: `/data-umum/${id}`,
           method: "PUT",
           headers: {
@@ -156,7 +156,7 @@ export default async function talikuatGatewayRoutes(fastify: FastifyInstance) {
         const { id } = request.params as { id: string };
         const body = request.body;
         const result = await callService({
-          serviceBaseUrl: paketServiceUrl,
+          serviceBaseUrl: talikuatServiceUrl,
           path: `/data-umum/adendum/${id}`,
           method: "POST",
           headers: {
@@ -178,7 +178,7 @@ export default async function talikuatGatewayRoutes(fastify: FastifyInstance) {
     try {
       const authHeader = request.headers.authorization || "";
       const result = await callService({
-        serviceBaseUrl: paketServiceUrl,
+        serviceBaseUrl: talikuatServiceUrl,
         path: `/jadual`,
         method: "GET",
         headers: {
@@ -196,7 +196,7 @@ export default async function talikuatGatewayRoutes(fastify: FastifyInstance) {
       const authHeader = request.headers.authorization || "";
       const body = request.body;
       const result = await callService({
-        serviceBaseUrl: paketServiceUrl,
+        serviceBaseUrl: talikuatServiceUrl,
         path: `/jadual`,
         method: "POST",
         headers: {
@@ -217,7 +217,7 @@ export default async function talikuatGatewayRoutes(fastify: FastifyInstance) {
       const { id } = request.params as { id: string };
       const body = request.body;
       const result = await callService({
-        serviceBaseUrl: paketServiceUrl,
+        serviceBaseUrl: talikuatServiceUrl,
         path: `/jadual/${id}`,
         headers: {
           authorization: authHeader,
@@ -237,7 +237,7 @@ export default async function talikuatGatewayRoutes(fastify: FastifyInstance) {
       const authHeader = request.headers.authorization || "";
       const { id } = request.params as { id: string };
       const result = await callService({
-        serviceBaseUrl: paketServiceUrl,
+        serviceBaseUrl: talikuatServiceUrl,
         path: `/jadual/data-umum-detail/${id}`,
         method: "GET",
         headers: {
@@ -258,7 +258,7 @@ export default async function talikuatGatewayRoutes(fastify: FastifyInstance) {
         const authHeader = request.headers.authorization || "";
         const { dataUmumId } = request.params as { dataUmumId: string };
         const result = await callService({
-          serviceBaseUrl: paketServiceUrl,
+          serviceBaseUrl: talikuatServiceUrl,
           path: `/data-umum/laporan-mingguan/${dataUmumId}`,
           method: "GET",
           headers: {
@@ -279,7 +279,7 @@ export default async function talikuatGatewayRoutes(fastify: FastifyInstance) {
       const authHeader = request.headers.authorization || "";
       const body = request.body;
       const result = await callService({
-        serviceBaseUrl: paketServiceUrl,
+        serviceBaseUrl: talikuatServiceUrl,
         path: `/data-umum/laporan-mingguan`,
         method: "POST",
         headers: {
@@ -299,7 +299,7 @@ export default async function talikuatGatewayRoutes(fastify: FastifyInstance) {
       const { id } = request.params as { id: string };
       const body = request.body;
       const result = await callService({
-        serviceBaseUrl: paketServiceUrl,
+        serviceBaseUrl: talikuatServiceUrl,
         path: `/data-umum/laporan-mingguan/${id}`,
         headers: {
           authorization: authHeader,
@@ -318,7 +318,7 @@ export default async function talikuatGatewayRoutes(fastify: FastifyInstance) {
       const authHeader = request.headers.authorization || "";
       const { id } = request.params as { id: string };
       const result = await callService({
-        serviceBaseUrl: paketServiceUrl,
+        serviceBaseUrl: talikuatServiceUrl,
         path: `/data-umum/laporan-mingguan/${id}`,
         method: "DELETE",
         headers: {
