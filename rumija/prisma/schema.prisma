@@ -1,16 +1,10 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client"
-  output   = "../generated/prisma"
+  output   = "../src/generated/prisma"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
 }
 
 
@@ -20,6 +14,8 @@ model RumijaKelas {
   kode            String
   created_at      DateTime  @default(now())
   updated_at      DateTime  @updatedAt
+
+  rumijas Rumija[]
 }
 
 model RumijaType {
@@ -28,28 +24,60 @@ model RumijaType {
   kode            String
   created_at      DateTime  @default(now())
   updated_at      DateTime  @updatedAt
+
+  RumijaInventaris RumijaInventaris[]
+  rumijas Rumija[]
 }
 
-model RumihaInventaris {
+
+model Rumija {
   id               Int       @id @default(autoincrement())
+  no_izin          String
   name             String
-  kode            String
+  alamat          String
+  luas            Float
+  ruas_id             Int
+  segment_jalan       String
+  lat_awal            Float
+  long_awal           Float
+  uptd_id             Int
+  uraian            String
+  tanggal_izin        DateTime @db.Date
+  tanggal_expired      DateTime @db.Date
+  rumija_type_id      Int
+  rumija_kelas_id     Int
+  foto            String
+  video           String
   created_at      DateTime  @default(now())
   updated_at      DateTime  @updatedAt
+
+  RumijaType      RumijaType @relation(fields: [rumija_type_id], references: [id])
+  RumijaKelas    RumijaKelas @relation(fields: [rumija_kelas_id], references: [id])
 }
 
-model RumijaStatus {
+model RumijaInventaris {
   id               Int       @id @default(autoincrement())
   name             String
-  kode            String
+  ruas_id             Int
+  segment_jalan       String
+  lat_awal            Float
+  long_awal           Float
+  uptd_id             Int
+  rumija_type_id      Int
   created_at      DateTime  @default(now())
   updated_at      DateTime  @updatedAt
+  RumijaType      RumijaType @relation(fields: [rumija_type_id], references: [id])
+  
 }
 
 model RumijaPelangaran {
   id               Int       @id @default(autoincrement())
-  name             String
-  kode            String
+  foto            String  
+  segment_jalan       String
+  lat             Float
+  long            Float
+  keterangan       String
   created_at      DateTime  @default(now())
   updated_at      DateTime  @updatedAt
+
 }
