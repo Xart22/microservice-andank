@@ -8,6 +8,7 @@ import talikuatGatewayRoutes from "./routes/talikuat.gateway.route.js";
 import authGatewayRoutes from "./routes/auth.gateway.routes.js";
 import { pemeliharaanGatewayRoutes } from "./routes/pemeliharaan.gateway.routes.js";
 import laporanMasyarakatGatewayRoutes from "./routes/laporan-masyarakat.gateway.routes.js";
+import { rumijaGatewayRoutes } from "./routes/rumija.gateway.routes.js";
 
 async function buildServer() {
   const fastify = Fastify({
@@ -43,6 +44,7 @@ async function buildServer() {
   fastify.register(authGatewayRoutes, { prefix: "/gateway" });
   fastify.register(pemeliharaanGatewayRoutes, { prefix: "/gateway" });
   fastify.register(laporanMasyarakatGatewayRoutes, { prefix: "/gateway" });
+  fastify.register(rumijaGatewayRoutes, { prefix: "/gateway" });
 
   return fastify;
 }
