@@ -94,6 +94,27 @@ services:
     ports:
       - "3004:3004"
 
+  rumija-service:
+    build:
+      context: ./rumija-service
+      dockerfile: Dockerfile
+    container_name: rumija-service
+    env_file:
+      - ./rumija-service/.env.docker
+    environment:
+      DATABASE_URL: mysql://root:Harbang%4079@mysql:3306/rumija_service
+      JWT_SECRET: super-secret-yang-sama
+      DATABASE_USER: root
+      DATABASE_PASSWORD: Harbang@79
+      DATABASE_NAME: rumija_service
+      DATABASE_HOST: mysql
+      DATABASE_PORT: 3306
+      PORT: 3005
+    depends_on:
+      - mysql
+    ports:
+      - "3005:3005"
+
   dashboard-service:
     build:
       context: ./dashboard-service
@@ -113,11 +134,13 @@ services:
       TALIKUAT_SERVICE_URL: http://talikuat-service:3002
       PEMELIHARAN_SERVICE_URL: http://pemeliharan-service:3003
       LAPORAN_SERVICE_URL: http://laporan-service:3004
+      RUMIJA_SERVICE_URL: http://rumija-service:3005
     depends_on:
       - user-service
       - talikuat-service
       - pemeliharan-service
       - laporan-service
+      - rumija-service
     ports:
       - "3000:3000"
 
