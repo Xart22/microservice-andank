@@ -94,7 +94,7 @@ services:
       talikuat-service-migrate:
         condition: service_completed_successfully
     ports:
-      - "3002:3002"
+      - "3003:3003"
 
   # ============================================
   # PEMELIHARAAN SERVICE
@@ -135,7 +135,7 @@ services:
       pemeliharaan-service-migrate:
         condition: service_completed_successfully
     ports:
-      - "3003:3003"
+      - "3002:3002"
 
   # ============================================
   # LAPORAN SERVICE
