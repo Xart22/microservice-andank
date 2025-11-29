@@ -26,4 +26,4 @@ ENV NODE_ENV=production
 EXPOSE 3004
 
 # 8. Jalankan migrate + start
-CMD ["sh", "-c", "npx prisma migrate dev --name init && node dist/server.js"]
+CMD ["sh", "-c", "node dist/server.js"]
