@@ -15,6 +15,7 @@ services:
       context: ./user-service
       dockerfile: Dockerfile
     container_name: user-service
+    restart: always
     env_file:
       - ./user-service/.env.docker
     environment:
@@ -36,6 +37,7 @@ services:
       context: ./talikuat-service
       dockerfile: Dockerfile
     container_name: talikuat-service
+    restart: always
     env_file:
       - ./talikuat-service/.env.docker
     environment:
@@ -57,6 +59,7 @@ services:
       context: ./pemeliharan-service
       dockerfile: Dockerfile
     container_name: pemeliharan-service
+    restart: always
     env_file:
       - ./pemeliharan-service/.env.docker
     environment:
@@ -78,6 +81,7 @@ services:
       context: ./laporan-service
       dockerfile: Dockerfile
     container_name: laporan-service
+    restart: always
     env_file:
       - ./laporan-service/.env.docker
     environment:
@@ -99,6 +103,7 @@ services:
       context: ./rumija-service
       dockerfile: Dockerfile
     container_name: rumija-service
+    restart: always
     env_file:
       - ./rumija-service/.env.docker
     environment:
@@ -120,6 +125,7 @@ services:
       context: ./dashboard-service
       dockerfile: Dockerfile
     container_name: dashboard-service
+    restart: always
     env_file:
       - ./dashboard-service/.env.docker
     environment:
