@@ -87,7 +87,7 @@ services:
       DATABASE_NAME: talikuat_service
       DATABASE_HOST: mysql
       DATABASE_PORT: 3306
-      PORT: 3002
+      PORT: 3003
     depends_on:
       mysql:
         condition: service_healthy
@@ -128,7 +128,7 @@ services:
       DATABASE_NAME: pemeliharaan_service
       DATABASE_HOST: mysql
       DATABASE_PORT: 3306
-      PORT: 3003
+      PORT: 3002
     depends_on:
       mysql:
         condition: service_healthy
