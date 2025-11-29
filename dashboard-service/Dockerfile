@@ -10,6 +10,8 @@ RUN npm install
 COPY prisma ./prisma
 RUN npx prisma generate
 
+ENV DATABASE_URL="mysql://root:Harbang@79@mysql:3306/dashboard_service"
+
 # 3. Copy source code
 COPY . .
 

@@ -8,6 +8,7 @@ RUN npm install
 
 # 2. Prisma: schema + generate client
 COPY prisma ./prisma
+ENV DATABASE_URL="mysql://root:Harbang@79@mysql:3306/rumija_service"
 RUN npx prisma generate
 
 # 3. Copy source code

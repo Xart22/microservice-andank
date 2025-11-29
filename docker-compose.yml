@@ -9,6 +9,26 @@ services:
     volumes:
       - mysql-data:/var/lib/mysql
       - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 5s
+      retries: 10
+
+  # ============================================
+  # USER SERVICE
+  # ============================================
+  user-service-migrate:
+    build:
+      context: ./user-service
+      dockerfile: Dockerfile
+    container_name: user-service-migrate
+    command: npx prisma migrate deploy
+    environment:
+      DATABASE_URL: mysql://root:Harbang%4079@mysql:3306/user_service
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: "no"
 
   user-service:
     build:
@@ -28,9 +48,28 @@ services:
       DATABASE_PORT: 3306
       PORT: 3001
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
+      user-service-migrate:
+        condition: service_completed_successfully
     ports:
       - "3001:3001"
+
+  # ============================================
+  # TALIKUAT SERVICE
+  # ============================================
+  talikuat-service-migrate:
+    build:
+      context: ./talikuat-service
+      dockerfile: Dockerfile
+    container_name: talikuat-service-migrate
+    command: npx prisma migrate deploy
+    environment:
+      DATABASE_URL: mysql://root:Harbang%4079@mysql:3306/talikuat_service
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: "no"
 
   talikuat-service:
     build:
@@ -50,9 +89,28 @@ services:
       DATABASE_PORT: 3306
       PORT: 3002
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
+      talikuat-service-migrate:
+        condition: service_completed_successfully
     ports:
       - "3002:3002"
+
+  # ============================================
+  # PEMELIHARAAN SERVICE
+  # ============================================
+  pemeliharaan-service-migrate:
+    build:
+      context: ./pemeliharaan-service
+      dockerfile: Dockerfile
+    container_name: pemeliharaan-service-migrate
+    command: npx prisma migrate deploy
+    environment:
+      DATABASE_URL: mysql://root:Harbang%4079@mysql:3306/pemeliharaan_service
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: "no"
 
   pemeliharaan-service:
     build:
@@ -72,9 +130,28 @@ services:
       DATABASE_PORT: 3306
       PORT: 3003
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
+      pemeliharaan-service-migrate:
+        condition: service_completed_successfully
     ports:
       - "3003:3003"
+
+  # ============================================
+  # LAPORAN SERVICE
+  # ============================================
+  laporan-service-migrate:
+    build:
+      context: ./laporan-service
+      dockerfile: Dockerfile
+    container_name: laporan-service-migrate
+    command: npx prisma migrate deploy
+    environment:
+      DATABASE_URL: mysql://root:Harbang%4079@mysql:3306/laporan_service
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: "no"
 
   laporan-service:
     build:
@@ -94,9 +171,28 @@ services:
       DATABASE_PORT: 3306
       PORT: 3004
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
+      laporan-service-migrate:
+        condition: service_completed_successfully
     ports:
       - "3004:3004"
+
+  # ============================================
+  # RUMIJA SERVICE
+  # ============================================
+  rumija-service-migrate:
+    build:
+      context: ./rumija-service
+      dockerfile: Dockerfile
+    container_name: rumija-service-migrate
+    command: npx prisma migrate deploy
+    environment:
+      DATABASE_URL: mysql://root:Harbang%4079@mysql:3306/rumija_service
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: "no"
 
   rumija-service:
     build:
@@ -116,9 +212,28 @@ services:
       DATABASE_PORT: 3306
       PORT: 3005
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
+      rumija-service-migrate:
+        condition: service_completed_successfully
     ports:
       - "3005:3005"
+
+  # ============================================
+  # DASHBOARD SERVICE
+  # ============================================
+  dashboard-service-migrate:
+    build:
+      context: ./dashboard-service
+      dockerfile: Dockerfile
+    container_name: dashboard-service-migrate
+    command: npx prisma migrate deploy
+    environment:
+      DATABASE_URL: mysql://root:Harbang%4079@mysql:3306/dashboard_service
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: "no"
 
   dashboard-service:
     build:
@@ -143,11 +258,20 @@ services:
       LAPORAN_SERVICE_URL: http://laporan-service:3004
       RUMIJA_SERVICE_URL: http://rumija-service:3005
     depends_on:
-      - user-service
-      - talikuat-service
-      - pemeliharaan-service
-      - laporan-service
-      - rumija-service
+      mysql:
+        condition: service_healthy
+      dashboard-service-migrate:
+        condition: service_completed_successfully
+      user-service:
+        condition: service_started
+      talikuat-service:
+        condition: service_started
+      pemeliharaan-service:
+        condition: service_started
+      laporan-service:
+        condition: service_started
+      rumija-service:
+        condition: service_started
     ports:
       - "3000:3000"
 
