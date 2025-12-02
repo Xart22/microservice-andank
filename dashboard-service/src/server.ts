@@ -9,12 +9,16 @@ import authGatewayRoutes from "./routes/auth.gateway.routes.js";
 import { pemeliharaanGatewayRoutes } from "./routes/pemeliharaan.gateway.routes.js";
 import laporanMasyarakatGatewayRoutes from "./routes/laporan-masyarakat.gateway.routes.js";
 import { rumijaGatewayRoutes } from "./routes/rumija.gateway.routes.js";
+import fastifyMultipart from "@fastify/multipart";
 
 async function buildServer() {
   const fastify = Fastify({
     logger: true,
   });
-
+  await fastify.register(fastifyMultipart, {
+    attachFieldsToBody: true,
+    limits: { fileSize: 10 * 1024 * 1024 }, // 10 MB
+  });
   await fastify.register(prismaPlugin);
 
   await fastify.register(fastifyJwt, {

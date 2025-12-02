@@ -76,17 +76,29 @@ export async function pemeliharaanGatewayRoutes(fastify: FastifyInstance) {
     { preHandler: [fastify.authenticate] },
     async (request, reply) => {
       try {
-        const body = request.body;
+        // forward semua header dari client (kecuali host & content-length)
+        const headers: Record<string, string> = {};
+        for (const [key, value] of Object.entries(request.headers)) {
+          if (typeof value === "string") {
+            headers[key] = value;
+          }
+        }
+        delete headers.host;
+        delete headers["content-length"]; // biar undici hitung sendiri
+
         const result = await callService({
           serviceBaseUrl: pemeliharaanServiceUrl,
           path: "/sapulobang",
           method: "POST",
-          body,
+          headers,
+          // ini penting: kirim RAW stream (Node IncomingMessage)
+          body: request.raw,
         });
 
         return reply.send(result);
       } catch (err: any) {
-        reply
+        request.log.error({ err }, "Error proxying /sapulobang");
+        return reply
           .code(err.statusCode || 500)
           .send(err.body || { message: "Error" });
       }

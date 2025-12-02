@@ -1,20 +1,17 @@
-// src/libs/httpClient.ts
 import { request } from "undici";
+import { Readable } from "stream";
 
 export type HttpMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
 
 interface CallServiceOptions {
-  serviceBaseUrl: string; // misal: process.env.USER_SERVICE_URL
-  path: string; // misal: "/auth/login"
+  serviceBaseUrl: string;
+  path: string;
   method?: HttpMethod;
   headers?: Record<string, string>;
   query?: Record<string, string | number | boolean | undefined>;
-  body?: any; // object JSON
+  body?: any; // bisa JSON, stream, dsb
 }
 
-/**
- * Helper sederhana untuk call service lain dari gateway
- */
 export async function callService<T = any>({
   serviceBaseUrl,
   path,
@@ -33,24 +30,34 @@ export async function callService<T = any>({
     });
   }
 
+  const isStream =
+    body &&
+    (body instanceof Readable ||
+      typeof (body as any).pipe === "function" ||
+      typeof (body as any).on === "function");
+
+  const isJsonBody = body && !isStream && typeof body === "object";
+
   const res = await request(url.toString(), {
     method,
     headers: {
-      "content-type": body ? "application/json" : undefined,
+      // kalau JSON, kita set content-type
+      ...(isJsonBody ? { "content-type": "application/json" } : {}),
+      // kalau stream (multipart), JANGAN set content-type di sini
       ...headers,
     },
-    body: body ? JSON.stringify(body) : undefined,
+    body: isJsonBody ? JSON.stringify(body) : body, // stream/raw langsung diteruskan
   });
 
-  const resBody = await res.body.text();
+  const text = await res.body.text();
   const contentType = res.headers["content-type"] ?? "";
 
-  let parsed: any = resBody;
+  let parsed: any = text;
   if (contentType.includes("application/json")) {
     try {
-      parsed = JSON.parse(resBody);
-    } catch (e) {
-      // ignore
+      parsed = JSON.parse(text);
+    } catch {
+      // biarin aja text apa adanya
     }
   }
 
