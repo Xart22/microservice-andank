@@ -22,7 +22,7 @@ services:
       context: ./user-service
       dockerfile: Dockerfile
     container_name: user-service-migrate
-    command: npx prisma migrate deploy
+    command: npx prisma migrate dev --name init
     environment:
       DATABASE_URL: mysql://root:Harbang%4079@mysql:3306/user_service
     depends_on:
@@ -63,7 +63,7 @@ services:
       context: ./talikuat-service
       dockerfile: Dockerfile
     container_name: talikuat-service-migrate
-    command: npx prisma migrate deploy
+    command: npx prisma migrate dev --name init
     environment:
       DATABASE_URL: mysql://root:Harbang%4079@mysql:3306/talikuat_service
     depends_on:
@@ -104,7 +104,7 @@ services:
       context: ./pemeliharaan-service
       dockerfile: Dockerfile
     container_name: pemeliharaan-service-migrate
-    command: npx prisma migrate deploy
+    command: npx prisma migrate dev --name init
     environment:
       DATABASE_URL: mysql://root:Harbang%4079@mysql:3306/pemeliharaan_service
     depends_on:
@@ -145,7 +145,7 @@ services:
       context: ./laporan-service
       dockerfile: Dockerfile
     container_name: laporan-service-migrate
-    command: npx prisma migrate deploy
+    command: npx prisma migrate dev --name init
     environment:
       DATABASE_URL: mysql://root:Harbang%4079@mysql:3306/laporan_service
     depends_on:
@@ -186,7 +186,7 @@ services:
       context: ./rumija-service
       dockerfile: Dockerfile
     container_name: rumija-service-migrate
-    command: npx prisma migrate deploy
+    command: npx prisma migrate dev --name init
     environment:
       DATABASE_URL: mysql://root:Harbang%4079@mysql:3306/rumija_service
     depends_on:
@@ -227,7 +227,7 @@ services:
       context: ./dashboard-service
       dockerfile: Dockerfile
     container_name: dashboard-service-migrate
-    command: npx prisma migrate deploy
+    command: npx prisma migrate dev --name init
     environment:
       DATABASE_URL: mysql://root:Harbang%4079@mysql:3306/dashboard_service
     depends_on:
