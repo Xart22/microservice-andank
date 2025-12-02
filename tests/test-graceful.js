@@ -7,16 +7,17 @@ export const options = {
 };
 
 export default function () {
-  // Target: Service Pemeliharaan yang sedang MATI (Port 3002)
+  // Target: Service Pemeliharaan (Port 3002) yang SEDANG MATI
+  // Kita tembak endpoint /health
   const res = http.get('http://localhost:3002/health');
 
   check(res, {
-    // Status 0 = Connection Refused (Docker mati total)
-    // Ini membuktikan sistem langsung tahu kalau dia mati, tidak loading lama.
-    'Fail Fast (Connection Refused)': (r) => r.status === 0, 
+    // Status 0 artinya "Connection Refused" (Docker mati total)
+    // Ini bagus! Artinya sistem langsung tahu kalau service tidak ada.
+    'Fail Fast (System Refused)': (r) => r.status === 0,
     
-    // Respon harus cepat (di bawah 100ms), jangan sampai user menunggu (timeout)
-    'Latency Rendah (< 100ms)': (r) => r.timings.duration < 100,
+    // Respon harus sangat cepat (< 50ms)
+    // Jangan sampai user menunggu loading lama (Timeout)
+    'Respon Cepat (< 50ms)': (r) => r.timings.duration < 50,
   });
 }
-

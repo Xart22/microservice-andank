@@ -13,9 +13,15 @@ async function buildServer() {
 
   await fastify.register(prismaPlugin);
   await fastify.register(fastifyMultipart, {
-    attachFieldsToBody: true,
-    limits: { fileSize: 10 * 1024 * 1024 }, // 10 MB
-  });
+  attachFieldsToBody: true,
+  limits: {
+    fileSize: 200 * 1024 * 1024,    // 200 MB (aman untuk load test)
+    fieldSize: 50 * 1024 * 1024,    // 50 MB untuk field-string JSON
+    fields: 200,                    // jumlah field
+    parts: 500,                     // total parts
+    files: 50                       // file upload max
+  }
+});
 
   await ensureUploadDir();
 
