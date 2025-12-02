@@ -1,10 +1,17 @@
 import http from "k6/http";
 import { check, sleep } from "k6";
 import { FormData } from "https://jslib.k6.io/formdata/0.0.2/index.js";
-const img = open("./image/test.png", "b");
+// SETTING: Simulasi Beban Kerja (Naik turun seperti jam kerja)
+
+const img = open("../../image/test.png", "b");
 export const options = {
-  vus: 1,
-  iterations: 1,
+  stages: [
+    { duration: "5s", target: 5 }, // Pemanasan
+    { duration: "20s", target: 20 }, // Beban Puncak (20 Petugas input barengan)
+    { duration: "5s", target: 0 }, // Pendinginan
+  ],
+  // Syarat Lulus: Error harus 0.00%
+  thresholds: { http_req_failed: ["rate==0.00"] },
 };
 
 export default function () {

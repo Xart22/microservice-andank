@@ -1,7 +1,7 @@
 import http from "k6/http";
 import { check, sleep } from "k6";
 import { FormData } from "https://jslib.k6.io/formdata/0.0.2/index.js";
-const img = open("./image/test.png", "b");
+const img = open("../../image/test.png", "b");
 export const options = {
   vus: 1,
   iterations: 1,
