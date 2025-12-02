@@ -253,8 +253,8 @@ services:
       DATABASE_PORT: 3306
       JWT_SECRET: super-secret-yang-sama
       USER_SERVICE_URL: http://user-service:3001
-      TALIKUAT_SERVICE_URL: http://talikuat-service:3002
-      PEMELIHARAAN_SERVICE_URL: http://pemeliharaan-service:3003
+      PEMELIHARAAN_SERVICE_URL: http://pemeliharaan-service:3002
+      TALIKUAT_SERVICE_URL: http://talikuat-service:3003
       LAPORAN_SERVICE_URL: http://laporan-service:3004
       RUMIJA_SERVICE_URL: http://rumija-service:3005
     depends_on:
