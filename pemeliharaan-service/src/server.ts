@@ -14,6 +14,7 @@ async function buildServer() {
   await fastify.register(prismaPlugin);
   await fastify.register(fastifyMultipart, {
     attachFieldsToBody: true,
+    limits: { fileSize: 10 * 1024 * 1024 }, // 10 MB
   });
 
   await ensureUploadDir();
