@@ -2,18 +2,22 @@ import { FastifyInstance } from "fastify";
 import { callService } from "../libs/httpClient.js";
 
 export default async function laporanMasyarakatGatewayRoutes(
-  fastify: FastifyInstance
+  fastify: FastifyInstance,
 ) {
   const laporanServiceUrl = process.env.LAPORAN_SERVICE_URL!;
 
   //get all laporan-masyarakat
   fastify.get("/laporan-masyarakat", async (request, reply) => {
     try {
+      const authHeader = request.headers.authorization || "";
       const body = request.body;
       const result = await callService({
         serviceBaseUrl: laporanServiceUrl,
         path: "/laporan-masyarakat",
         method: "GET",
+        headers: {
+          authorization: authHeader,
+        },
         body,
       });
 
@@ -44,7 +48,7 @@ export default async function laporanMasyarakatGatewayRoutes(
           .code(err.statusCode || 500)
           .send(err.body || { message: "Error" });
       }
-    }
+    },
   );
 
   //create laporan-masyarakat
@@ -71,7 +75,7 @@ export default async function laporanMasyarakatGatewayRoutes(
           .code(err.statusCode || 500)
           .send(err.body || { message: "Error" });
       }
-    }
+    },
   );
 
   //delete laporan-masyarakat by id
@@ -95,7 +99,7 @@ export default async function laporanMasyarakatGatewayRoutes(
           .code(err.statusCode || 500)
           .send(err.body || { message: "Error" });
       }
-    }
+    },
   );
   //update laporan-masyarakat by id
   fastify.put(
@@ -121,7 +125,7 @@ export default async function laporanMasyarakatGatewayRoutes(
           .code(err.statusCode || 500)
           .send(err.body || { message: "Error" });
       }
-    }
+    },
   );
 
   //jenis laporan routes
@@ -161,7 +165,7 @@ export default async function laporanMasyarakatGatewayRoutes(
           .code(err.statusCode || 500)
           .send(err.body || { message: "Error" });
       }
-    }
+    },
   );
   //create jenis-laporan
   fastify.post(
@@ -186,7 +190,7 @@ export default async function laporanMasyarakatGatewayRoutes(
           .code(err.statusCode || 500)
           .send(err.body || { message: "Error" });
       }
-    }
+    },
   );
   //delete jenis-laporan by id
   fastify.delete(
@@ -210,7 +214,7 @@ export default async function laporanMasyarakatGatewayRoutes(
           .code(err.statusCode || 500)
           .send(err.body || { message: "Error" });
       }
-    }
+    },
   );
   //update jenis-laporan by id
   fastify.put(
@@ -237,7 +241,7 @@ export default async function laporanMasyarakatGatewayRoutes(
           .code(err.statusCode || 500)
           .send(err.body || { message: "Error" });
       }
-    }
+    },
   );
 
   //response laporan routes
@@ -276,7 +280,7 @@ export default async function laporanMasyarakatGatewayRoutes(
           .code(err.statusCode || 500)
           .send(err.body || { message: "Error" });
       }
-    }
+    },
   );
   //create response-laporan
   fastify.post(
@@ -301,7 +305,7 @@ export default async function laporanMasyarakatGatewayRoutes(
           .code(err.statusCode || 500)
           .send(err.body || { message: "Error" });
       }
-    }
+    },
   );
   //delete response-laporan by id
   fastify.delete(
@@ -324,7 +328,7 @@ export default async function laporanMasyarakatGatewayRoutes(
           .code(err.statusCode || 500)
           .send(err.body || { message: "Error" });
       }
-    }
+    },
   );
   //update response-laporan by id
   fastify.put(
@@ -349,6 +353,6 @@ export default async function laporanMasyarakatGatewayRoutes(
           .code(err.statusCode || 500)
           .send(err.body || { message: "Error" });
       }
-    }
+    },
   );
 }

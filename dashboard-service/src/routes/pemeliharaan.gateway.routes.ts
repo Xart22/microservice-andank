@@ -9,11 +9,15 @@ export async function pemeliharaanGatewayRoutes(fastify: FastifyInstance) {
     { preHandler: [fastify.authenticate] },
     async (request, reply) => {
       try {
+        const authHeader = request.headers.authorization || "";
         const body = request.body;
         const result = await callService({
           serviceBaseUrl: pemeliharaanServiceUrl,
           path: "/sapulobang",
           method: "GET",
+          headers: {
+            Authorization: authHeader,
+          },
           body,
         });
 
@@ -23,7 +27,7 @@ export async function pemeliharaanGatewayRoutes(fastify: FastifyInstance) {
           .code(err.statusCode || 500)
           .send(err.body || { message: "Error" });
       }
-    }
+    },
   );
 
   // get all sapulobang
@@ -32,11 +36,15 @@ export async function pemeliharaanGatewayRoutes(fastify: FastifyInstance) {
     { preHandler: [fastify.authenticate] },
     async (request, reply) => {
       try {
+        const authHeader = request.headers.authorization || "";
         const body = request.body;
         const result = await callService({
           serviceBaseUrl: pemeliharaanServiceUrl,
           path: "/sapulobang/all",
           method: "GET",
+          headers: {
+            Authorization: authHeader,
+          },
           body,
         });
 
@@ -46,7 +54,7 @@ export async function pemeliharaanGatewayRoutes(fastify: FastifyInstance) {
           .code(err.statusCode || 500)
           .send(err.body || { message: "Error" });
       }
-    }
+    },
   );
 
   // get sapulobang by id
@@ -56,10 +64,14 @@ export async function pemeliharaanGatewayRoutes(fastify: FastifyInstance) {
     async (request, reply) => {
       try {
         const { id } = request.params as { id: string };
+        const authHeader = request.headers.authorization || "";
         const result = await callService({
           serviceBaseUrl: pemeliharaanServiceUrl,
           path: `/sapulobang/${id}`,
           method: "GET",
+          headers: {
+            Authorization: authHeader,
+          },
         });
         return reply.send(result);
       } catch (err: any) {
@@ -67,7 +79,7 @@ export async function pemeliharaanGatewayRoutes(fastify: FastifyInstance) {
           .code(err.statusCode || 500)
           .send(err.body || { message: "Error" });
       }
-    }
+    },
   );
 
   // create sapulobang
@@ -76,22 +88,23 @@ export async function pemeliharaanGatewayRoutes(fastify: FastifyInstance) {
     { preHandler: [fastify.authenticate] },
     async (request, reply) => {
       try {
-        // forward semua header dari client (kecuali host & content-length)
+        const authHeader = request.headers.authorization || "";
         const headers: Record<string, string> = {};
         for (const [key, value] of Object.entries(request.headers)) {
           if (typeof value === "string") {
             headers[key] = value;
           }
         }
+        headers["authorization"] = authHeader;
         delete headers.host;
-        delete headers["content-length"]; // biar undici hitung sendiri
+        delete headers["content-length"];
 
         const result = await callService({
           serviceBaseUrl: pemeliharaanServiceUrl,
           path: "/sapulobang",
           method: "POST",
           headers,
-          // ini penting: kirim RAW stream (Node IncomingMessage)
+
           body: request.raw,
         });
 
@@ -102,7 +115,7 @@ export async function pemeliharaanGatewayRoutes(fastify: FastifyInstance) {
           .code(err.statusCode || 500)
           .send(err.body || { message: "Error" });
       }
-    }
+    },
   );
   // delete sapulobang
   fastify.delete(
@@ -111,10 +124,14 @@ export async function pemeliharaanGatewayRoutes(fastify: FastifyInstance) {
     async (request, reply) => {
       try {
         const { id } = request.params as { id: string };
+        const authHeader = request.headers.authorization || "";
         const result = await callService({
           serviceBaseUrl: pemeliharaanServiceUrl,
           path: `/sapulobang/${id}`,
           method: "DELETE",
+          headers: {
+            Authorization: authHeader,
+          },
         });
 
         return reply.send(result);
@@ -123,7 +140,7 @@ export async function pemeliharaanGatewayRoutes(fastify: FastifyInstance) {
           .code(err.statusCode || 500)
           .send(err.body || { message: "Error" });
       }
-    }
+    },
   );
   // update sapulobang
   fastify.put(
@@ -133,10 +150,14 @@ export async function pemeliharaanGatewayRoutes(fastify: FastifyInstance) {
       try {
         const { id } = request.params as { id: string };
         const body = request.body;
+        const authHeader = request.headers.authorization || "";
         const result = await callService({
           serviceBaseUrl: pemeliharaanServiceUrl,
           path: `/sapulobang/${id}`,
           method: "PUT",
+          headers: {
+            Authorization: authHeader,
+          },
           body,
         });
 
@@ -146,7 +167,7 @@ export async function pemeliharaanGatewayRoutes(fastify: FastifyInstance) {
           .code(err.statusCode || 500)
           .send(err.body || { message: "Error" });
       }
-    }
+    },
   );
   // get sapulobang by ruas_jalan_id
   fastify.get(
@@ -155,9 +176,13 @@ export async function pemeliharaanGatewayRoutes(fastify: FastifyInstance) {
     async (request, reply) => {
       try {
         const { ruas_jalan_id } = request.params as { ruas_jalan_id: string };
+        const authHeader = request.headers.authorization || "";
         const result = await callService({
           serviceBaseUrl: pemeliharaanServiceUrl,
           path: `/sapulobang/ruas/${ruas_jalan_id}`,
+          headers: {
+            Authorization: authHeader,
+          },
           method: "GET",
         });
         return reply.send(result);
@@ -166,7 +191,7 @@ export async function pemeliharaanGatewayRoutes(fastify: FastifyInstance) {
           .code(err.statusCode || 500)
           .send(err.body || { message: "Error" });
       }
-    }
+    },
   );
 
   // get sapulobang by sup_id
@@ -176,10 +201,14 @@ export async function pemeliharaanGatewayRoutes(fastify: FastifyInstance) {
     async (request, reply) => {
       try {
         const { sup_id } = request.params as { sup_id: string };
+        const authHeader = request.headers.authorization || "";
         const result = await callService({
           serviceBaseUrl: pemeliharaanServiceUrl,
           path: `/sapulobang/sup/${sup_id}`,
           method: "GET",
+          headers: {
+            Authorization: authHeader,
+          },
         });
         return reply.send(result);
       } catch (err: any) {
@@ -187,7 +216,7 @@ export async function pemeliharaanGatewayRoutes(fastify: FastifyInstance) {
           .code(err.statusCode || 500)
           .send(err.body || { message: "Error" });
       }
-    }
+    },
   );
   // get sapulobang by uptd_id
   fastify.get(
@@ -195,11 +224,15 @@ export async function pemeliharaanGatewayRoutes(fastify: FastifyInstance) {
     { preHandler: [fastify.authenticate] },
     async (request, reply) => {
       try {
+        const authHeader = request.headers.authorization || "";
         const { uptd_id } = request.params as { uptd_id: string };
         const result = await callService({
           serviceBaseUrl: pemeliharaanServiceUrl,
           path: `/sapulobang/uptd/${uptd_id}`,
           method: "GET",
+          headers: {
+            Authorization: authHeader,
+          },
         });
         return reply.send(result);
       } catch (err: any) {
@@ -207,7 +240,7 @@ export async function pemeliharaanGatewayRoutes(fastify: FastifyInstance) {
           .code(err.statusCode || 500)
           .send(err.body || { message: "Error" });
       }
-    }
+    },
   );
 
   // perencanaan sapulobang
@@ -217,11 +250,15 @@ export async function pemeliharaanGatewayRoutes(fastify: FastifyInstance) {
     async (request, reply) => {
       try {
         const { id } = request.params as { id: string };
+        const authHeader = request.headers.authorization || "";
         const body = request.body;
         const result = await callService({
           serviceBaseUrl: pemeliharaanServiceUrl,
           path: `/sapulobang/perencanaan/${id}`,
           method: "POST",
+          headers: {
+            Authorization: authHeader,
+          },
           body,
         });
         return reply.send(result);
@@ -230,7 +267,7 @@ export async function pemeliharaanGatewayRoutes(fastify: FastifyInstance) {
           .code(err.statusCode || 500)
           .send(err.body || { message: "Error" });
       }
-    }
+    },
   );
 
   // penanganan sapulobang
@@ -241,10 +278,14 @@ export async function pemeliharaanGatewayRoutes(fastify: FastifyInstance) {
       try {
         const { id } = request.params as { id: string };
         const body = request.body;
+        const authHeader = request.headers.authorization || "";
         const result = await callService({
           serviceBaseUrl: pemeliharaanServiceUrl,
           path: `/sapulobang/penanganan/${id}`,
           method: "POST",
+          headers: {
+            Authorization: authHeader,
+          },
           body,
         });
         return reply.send(result);
@@ -253,7 +294,7 @@ export async function pemeliharaanGatewayRoutes(fastify: FastifyInstance) {
           .code(err.statusCode || 500)
           .send(err.body || { message: "Error" });
       }
-    }
+    },
   );
 
   //kegiatan rutin routes
@@ -262,11 +303,15 @@ export async function pemeliharaanGatewayRoutes(fastify: FastifyInstance) {
     { preHandler: [fastify.authenticate] },
     async (request, reply) => {
       try {
+        const authHeader = request.headers.authorization || "";
         const body = request.body;
         const result = await callService({
           serviceBaseUrl: pemeliharaanServiceUrl,
           path: `/kegiatan-rutin`,
           method: "GET",
+          headers: {
+            Authorization: authHeader,
+          },
           body,
         });
         return reply.send(result);
@@ -275,7 +320,7 @@ export async function pemeliharaanGatewayRoutes(fastify: FastifyInstance) {
           .code(err.statusCode || 500)
           .send(err.body || { message: "Error" });
       }
-    }
+    },
   );
 
   ///kegiatan rutin by id
@@ -285,10 +330,14 @@ export async function pemeliharaanGatewayRoutes(fastify: FastifyInstance) {
     async (request, reply) => {
       try {
         const { id } = request.params as { id: string };
+        const authHeader = request.headers.authorization || "";
         const result = await callService({
           serviceBaseUrl: pemeliharaanServiceUrl,
           path: `/kegiatan-rutin/${id}`,
           method: "GET",
+          headers: {
+            Authorization: authHeader,
+          },
         });
         return reply.send(result);
       } catch (err: any) {
@@ -296,7 +345,7 @@ export async function pemeliharaanGatewayRoutes(fastify: FastifyInstance) {
           .code(err.statusCode || 500)
           .send(err.body || { message: "Error" });
       }
-    }
+    },
   );
   // create kegiatan rutin
   fastify.post(
@@ -304,11 +353,15 @@ export async function pemeliharaanGatewayRoutes(fastify: FastifyInstance) {
     { preHandler: [fastify.authenticate] },
     async (request, reply) => {
       try {
+        const authHeader = request.headers.authorization || "";
         const body = request.body;
         const result = await callService({
           serviceBaseUrl: pemeliharaanServiceUrl,
           path: `/kegiatan-rutin`,
           method: "POST",
+          headers: {
+            Authorization: authHeader,
+          },
           body,
         });
         return reply.send(result);
@@ -317,7 +370,7 @@ export async function pemeliharaanGatewayRoutes(fastify: FastifyInstance) {
           .code(err.statusCode || 500)
           .send(err.body || { message: "Error" });
       }
-    }
+    },
   );
   // update kegiatan rutin
   fastify.put(
@@ -327,10 +380,14 @@ export async function pemeliharaanGatewayRoutes(fastify: FastifyInstance) {
       try {
         const { id } = request.params as { id: string };
         const body = request.body;
+        const authHeader = request.headers.authorization || "";
         const result = await callService({
           serviceBaseUrl: pemeliharaanServiceUrl,
-          path: "/kegiatan-rutin`/${id}",
+          path: `/kegiatan-rutin/${id}`,
           method: "PUT",
+          headers: {
+            Authorization: authHeader,
+          },
           body,
         });
         return reply.send(result);
@@ -339,7 +396,7 @@ export async function pemeliharaanGatewayRoutes(fastify: FastifyInstance) {
           .code(err.statusCode || 500)
           .send(err.body || { message: "Error" });
       }
-    }
+    },
   );
 
   // delete kegiatan rutin
@@ -349,10 +406,14 @@ export async function pemeliharaanGatewayRoutes(fastify: FastifyInstance) {
     async (request, reply) => {
       try {
         const { id } = request.params as { id: string };
+        const authHeader = request.headers.authorization || "";
         const result = await callService({
           serviceBaseUrl: pemeliharaanServiceUrl,
           path: `/kegiatan-rutin/${id}`,
           method: "DELETE",
+          headers: {
+            Authorization: authHeader,
+          },
         });
         return reply.send(result);
       } catch (err: any) {
@@ -360,6 +421,6 @@ export async function pemeliharaanGatewayRoutes(fastify: FastifyInstance) {
           .code(err.statusCode || 500)
           .send(err.body || { message: "Error" });
       }
-    }
+    },
   );
 }
