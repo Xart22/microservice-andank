@@ -1,4 +1,5 @@
 import Fastify, { FastifyReply, FastifyRequest } from "fastify";
+import fastifyMultipart from "@fastify/multipart";
 import prismaPlugin from "./plugins/prisma.js";
 import fastifyJwt from "@fastify/jwt";
 import { rumijaRoutes } from "./routes/rumija.routes.js";
@@ -6,11 +7,25 @@ import { rumijaPelanggaranRoutes } from "./routes/rumija-pelenggaran.routes.js";
 import { rumijaTypeRoutes } from "./routes/rumija-type.routes.js";
 import { rumijaKelasRoutes } from "./routes/rumija-kelas.routes.js";
 import { rumijaInventarisRoutes } from "./routes/rumija-inventaris.routes.js";
+import { ensureUploadDir } from "./modules/helper/utils.js";
 
 async function buildServer() {
   const fastify = Fastify({
     logger: true,
   });
+
+  await fastify.register(fastifyMultipart, {
+    attachFieldsToBody: true,
+    limits: {
+      fileSize: 200 * 1024 * 1024, // 200 MB (aman untuk load test)
+      fieldSize: 50 * 1024 * 1024, // 50 MB untuk field-string JSON
+      fields: 200, // jumlah field
+      parts: 500, // total parts
+      files: 50, // file upload max
+    },
+  });
+
+  await ensureUploadDir();
 
   await fastify.register(prismaPlugin);
 
@@ -27,7 +42,7 @@ async function buildServer() {
       } catch (err) {
         reply.code(401).send({ message: "Unauthorized" });
       }
-    }
+    },
   );
 
   fastify.get("/health", async () => {
@@ -76,7 +91,7 @@ declare module "fastify" {
   interface FastifyInstance {
     authenticate: (
       request: FastifyRequest,
-      reply: FastifyReply
+      reply: FastifyReply,
     ) => Promise<void>;
   }
 }

@@ -1,9 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 
-import {
-  RumijaInventarisUncheckedCreateInput,
-  RumijaPelangaranUncheckedCreateInput,
-} from "../../generated/prisma/models.js";
+import { Prisma } from "../../generated/prisma/client.js";
 import { RumijaInventarisService } from "./rumija-inventaris.service.js";
 
 export class RumijaInventarisController {
@@ -14,7 +11,7 @@ export class RumijaInventarisController {
 
   getAllRumijaInventaris = async (
     request: FastifyRequest,
-    reply: FastifyReply
+    reply: FastifyReply,
   ) => {
     const rumijaInventaris =
       await this.rumijaInventarisService.getAllRumijaInventaris();
@@ -23,7 +20,7 @@ export class RumijaInventarisController {
 
   getRumijaInventarisById = async (
     request: FastifyRequest,
-    reply: FastifyReply
+    reply: FastifyReply,
   ) => {
     const { id } = request.params as { id: string };
     const rumijaInventaris =
@@ -33,9 +30,9 @@ export class RumijaInventarisController {
 
   createRumijaInventaris = async (
     request: FastifyRequest,
-    reply: FastifyReply
+    reply: FastifyReply,
   ) => {
-    const payload = request.body as RumijaInventarisUncheckedCreateInput;
+    const payload = request.body as Prisma.RumijaInventarisUncheckedCreateInput;
     const newRumijaInventaris =
       await this.rumijaInventarisService.createRumijaInventaris(payload);
     return reply.code(201).send(newRumijaInventaris);
@@ -43,7 +40,7 @@ export class RumijaInventarisController {
 
   deleteRumijaInventarisById = async (
     request: FastifyRequest,
-    reply: FastifyReply
+    reply: FastifyReply,
   ) => {
     const { id } = request.params as { id: string };
     await this.rumijaInventarisService.deleteRumijaInventarisById(Number(id));
@@ -52,7 +49,7 @@ export class RumijaInventarisController {
 
   updateRumijaInventarisById = async (
     request: FastifyRequest,
-    reply: FastifyReply
+    reply: FastifyReply,
   ) => {
     const { id } = request.params as { id: string };
     const payload = request.body as {
@@ -65,7 +62,7 @@ export class RumijaInventarisController {
     const updatedRumijaInventaris =
       await this.rumijaInventarisService.updateRumijaInventarisById(
         Number(id),
-        payload
+        payload,
       );
     return reply.send(updatedRumijaInventaris);
   };

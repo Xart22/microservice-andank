@@ -31,7 +31,7 @@ export default async function talikuatGatewayRoutes(fastify: FastifyInstance) {
           .code(err.statusCode || 500)
           .send(err.body || { message: "Error" });
       }
-    }
+    },
   );
   //get data umum by auth
   fastify.get(
@@ -58,7 +58,7 @@ export default async function talikuatGatewayRoutes(fastify: FastifyInstance) {
           .code(err.statusCode || 500)
           .send(err.body || { message: "Error" });
       }
-    }
+    },
   );
   // get all data umum
   fastify.get(
@@ -83,7 +83,7 @@ export default async function talikuatGatewayRoutes(fastify: FastifyInstance) {
           .code(err.statusCode || 500)
           .send(err.body || { message: "Error" });
       }
-    }
+    },
   );
 
   // create data umum
@@ -112,7 +112,7 @@ export default async function talikuatGatewayRoutes(fastify: FastifyInstance) {
           .code(err.statusCode || 500)
           .send(err.body || { message: "Error" });
       }
-    }
+    },
   );
 
   // update data umum
@@ -141,7 +141,7 @@ export default async function talikuatGatewayRoutes(fastify: FastifyInstance) {
           .code(err.statusCode || 500)
           .send(err.body || { message: "Error" });
       }
-    }
+    },
   );
 
   // addendum data umum
@@ -170,7 +170,7 @@ export default async function talikuatGatewayRoutes(fastify: FastifyInstance) {
           .code(err.statusCode || 500)
           .send(err.body || { message: "Error" });
       }
-    }
+    },
   );
 
   // jadual routes
@@ -259,7 +259,7 @@ export default async function talikuatGatewayRoutes(fastify: FastifyInstance) {
         const { dataUmumId } = request.params as { dataUmumId: string };
         const result = await callService({
           serviceBaseUrl: talikuatServiceUrl,
-          path: `/data-umum/laporan-mingguan/${dataUmumId}`,
+          path: `/laporan-mingguan/${dataUmumId}`,
           method: "GET",
           headers: {
             authorization: authHeader,
@@ -271,7 +271,7 @@ export default async function talikuatGatewayRoutes(fastify: FastifyInstance) {
           .code(err.statusCode || 500)
           .send(err.body || { message: "Error" });
       }
-    }
+    },
   );
 
   fastify.post("/talikuat/laporan-mingguan", async (request, reply) => {
@@ -280,7 +280,7 @@ export default async function talikuatGatewayRoutes(fastify: FastifyInstance) {
       const body = request.body;
       const result = await callService({
         serviceBaseUrl: talikuatServiceUrl,
-        path: `/data-umum/laporan-mingguan`,
+        path: `/laporan-mingguan`,
         method: "POST",
         headers: {
           authorization: authHeader,
@@ -300,7 +300,7 @@ export default async function talikuatGatewayRoutes(fastify: FastifyInstance) {
       const body = request.body;
       const result = await callService({
         serviceBaseUrl: talikuatServiceUrl,
-        path: `/data-umum/laporan-mingguan/${id}`,
+        path: `/laporan-mingguan/${id}`,
         headers: {
           authorization: authHeader,
         },
@@ -319,7 +319,7 @@ export default async function talikuatGatewayRoutes(fastify: FastifyInstance) {
       const { id } = request.params as { id: string };
       const result = await callService({
         serviceBaseUrl: talikuatServiceUrl,
-        path: `/data-umum/laporan-mingguan/${id}`,
+        path: `/laporan-mingguan/${id}`,
         method: "DELETE",
         headers: {
           authorization: authHeader,
