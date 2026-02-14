@@ -7,3 +7,5 @@ src/generated/prisma
 /uploads
 
 dist
+
+/prisma/migrations

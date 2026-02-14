@@ -37,7 +37,7 @@ export class RumijaController {
     const foto = body.foto; // contoh field name: image
     const video = body.video; // contoh field name: image
     if (!foto || !foto.file) {
-      return reply.code(400).send({ message: "Image file is required" });
+      return reply.code(400).send({ message: "Foto file is required" });
     }
     if (!video || !video.file) {
       return reply.code(400).send({ message: "Video file is required" });

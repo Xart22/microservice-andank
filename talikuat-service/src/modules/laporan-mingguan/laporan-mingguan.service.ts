@@ -19,7 +19,7 @@ export class LaporanMingguanService {
 
   updateLaporanMingguan(
     dataLaporanMingguanId: number,
-    data: Prisma.LaporanMingguanUncheckedUpdateInput
+    data: Prisma.LaporanMingguanUncheckedUpdateInput,
   ) {
     return this.prisma.laporanMingguan.update({
       where: {

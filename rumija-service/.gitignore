@@ -4,3 +4,7 @@ node_modules
 
 src/generated
 /dist
+
+/prisma/migrations
+
+/src/uploads

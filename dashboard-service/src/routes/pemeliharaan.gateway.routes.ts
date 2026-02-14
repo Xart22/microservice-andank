@@ -89,31 +89,22 @@ export async function pemeliharaanGatewayRoutes(fastify: FastifyInstance) {
     async (request, reply) => {
       try {
         const authHeader = request.headers.authorization || "";
-        const headers: Record<string, string> = {};
-        for (const [key, value] of Object.entries(request.headers)) {
-          if (typeof value === "string") {
-            headers[key] = value;
-          }
-        }
-        headers["authorization"] = authHeader;
-        delete headers.host;
-        delete headers["content-length"];
-
         const result = await callService({
           serviceBaseUrl: pemeliharaanServiceUrl,
-          path: "/sapulobang",
+          path: `/sapulobang`,
           method: "POST",
-          headers,
-
-          body: request.raw,
+          headers: {
+            authorization: authHeader,
+          },
+          body: request.body,
         });
 
         return reply.send(result);
       } catch (err: any) {
-        request.log.error({ err }, "Error proxying /sapulobang");
+        request.log.error({ err }, "Error proxying /sapulobang " + err.message);
         return reply
           .code(err.statusCode || 500)
-          .send(err.body || { message: "Error" });
+          .send(err.body || { message: err.message || "Error" });
       }
     },
   );

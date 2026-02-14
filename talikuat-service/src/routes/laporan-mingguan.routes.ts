@@ -11,27 +11,27 @@ export default async function laporanMingguanRoutes(fastify: FastifyInstance) {
     {
       preHandler: [fastify.authenticate],
     },
-    controller.getLaporanMingguanByDataUmumId
+    controller.getLaporanMingguanByDataUmumId,
   );
   fastify.post(
-    "/",
+    "/data-umum/:id",
     {
       preHandler: [fastify.authenticate],
     },
-    controller.createLaporanMingguan
+    controller.createLaporanMingguan,
   );
   fastify.put(
     "/:id",
     {
       preHandler: [fastify.authenticate],
     },
-    controller.updateLaporanMingguan
+    controller.updateLaporanMingguan,
   );
   fastify.delete(
     "/:id",
     {
       preHandler: [fastify.authenticate],
     },
-    controller.deleteLaporanMingguan
+    controller.deleteLaporanMingguan,
   );
 }

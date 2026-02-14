@@ -37,7 +37,10 @@ export default async function talikuatGatewayRoutes(fastify: FastifyInstance) {
   fastify.get(
     "/talikuat/data-umum",
     {
-      preHandler: [fastify.authenticate, requireRoles(["ADMIN", "PPK"])],
+      preHandler: [
+        fastify.authenticate,
+        requireRoles(["ADMIN", "PPK", "SUPERADMIN"]),
+      ],
     },
     async (request, reply) => {
       try {
@@ -64,7 +67,10 @@ export default async function talikuatGatewayRoutes(fastify: FastifyInstance) {
   fastify.get(
     "/talikuat/data-umum/all",
     {
-      preHandler: [fastify.authenticate, requireRoles(["ADMIN", "PPK"])],
+      preHandler: [
+        fastify.authenticate,
+        requireRoles(["ADMIN", "PPK", "SUPERADMIN"]),
+      ],
     },
     async (request, reply) => {
       try {
@@ -90,7 +96,10 @@ export default async function talikuatGatewayRoutes(fastify: FastifyInstance) {
   fastify.post(
     "/talikuat/data-umum",
     {
-      preHandler: [fastify.authenticate, requireRoles(["ADMIN", "PPK"])],
+      preHandler: [
+        fastify.authenticate,
+        requireRoles(["ADMIN", "PPK", "SUPERADMIN"]),
+      ],
     },
     async (request, reply) => {
       try {
@@ -119,7 +128,10 @@ export default async function talikuatGatewayRoutes(fastify: FastifyInstance) {
   fastify.put(
     "/talikuat/data-umum/:id",
     {
-      preHandler: [fastify.authenticate, requireRoles(["ADMIN", "PPK"])],
+      preHandler: [
+        fastify.authenticate,
+        requireRoles(["ADMIN", "PPK", "SUPERADMIN"]),
+      ],
     },
     async (request, reply) => {
       try {
@@ -148,7 +160,10 @@ export default async function talikuatGatewayRoutes(fastify: FastifyInstance) {
   fastify.post(
     "/talikuat/data-umum/adendum/:id",
     {
-      preHandler: [fastify.authenticate, requireRoles(["ADMIN", "PPK"])],
+      preHandler: [
+        fastify.authenticate,
+        requireRoles(["ADMIN", "PPK", "SUPERADMIN"]),
+      ],
     },
     async (request, reply) => {
       try {
@@ -259,7 +274,7 @@ export default async function talikuatGatewayRoutes(fastify: FastifyInstance) {
         const { dataUmumId } = request.params as { dataUmumId: string };
         const result = await callService({
           serviceBaseUrl: talikuatServiceUrl,
-          path: `/laporan-mingguan/${dataUmumId}`,
+          path: `/laporan-mingguan/data-umum/${dataUmumId}`,
           method: "GET",
           headers: {
             authorization: authHeader,
@@ -274,24 +289,30 @@ export default async function talikuatGatewayRoutes(fastify: FastifyInstance) {
     },
   );
 
-  fastify.post("/talikuat/laporan-mingguan", async (request, reply) => {
-    try {
-      const authHeader = request.headers.authorization || "";
-      const body = request.body;
-      const result = await callService({
-        serviceBaseUrl: talikuatServiceUrl,
-        path: `/laporan-mingguan`,
-        method: "POST",
-        headers: {
-          authorization: authHeader,
-        },
-        body,
-      });
-      return reply.send(result);
-    } catch (err: any) {
-      reply.code(err.statusCode || 500).send(err.body || { message: "Error" });
-    }
-  });
+  fastify.post(
+    "/talikuat/laporan-mingguan/:dataUmumId",
+    async (request, reply) => {
+      try {
+        const authHeader = request.headers.authorization || "";
+        const { dataUmumId } = request.params as { dataUmumId: string };
+        const body = request.body;
+        const result = await callService({
+          serviceBaseUrl: talikuatServiceUrl,
+          path: `/laporan-mingguan/data-umum/${dataUmumId}`,
+          method: "POST",
+          headers: {
+            authorization: authHeader,
+          },
+          body,
+        });
+        return reply.send(result);
+      } catch (err: any) {
+        reply
+          .code(err.statusCode || 500)
+          .send(err.body || { message: "Error" });
+      }
+    },
+  );
 
   fastify.put("/talikuat/laporan-mingguan/:id", async (request, reply) => {
     try {

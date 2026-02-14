@@ -25,7 +25,7 @@ export async function rumijaGatewayRoutes(fastify: FastifyInstance) {
           .code(err.statusCode || 500)
           .send(err.body || { message: "Error" });
       }
-    }
+    },
   );
 
   fastify.get(
@@ -49,7 +49,7 @@ export async function rumijaGatewayRoutes(fastify: FastifyInstance) {
           .code(err.statusCode || 500)
           .send(err.body || { message: "Error" });
       }
-    }
+    },
   );
 
   fastify.post(
@@ -71,9 +71,9 @@ export async function rumijaGatewayRoutes(fastify: FastifyInstance) {
       } catch (err: any) {
         reply
           .code(err.statusCode || 500)
-          .send(err.body || { message: "Error" });
+          .send(err.body || { message: err.message || "Error" });
       }
-    }
+    },
   );
 
   fastify.delete(
@@ -97,7 +97,7 @@ export async function rumijaGatewayRoutes(fastify: FastifyInstance) {
           .code(err.statusCode || 500)
           .send(err.body || { message: "Error" });
       }
-    }
+    },
   );
 
   fastify.put(
@@ -122,7 +122,7 @@ export async function rumijaGatewayRoutes(fastify: FastifyInstance) {
           .code(err.statusCode || 500)
           .send(err.body || { message: "Error" });
       }
-    }
+    },
   );
 
   fastify.get(
@@ -145,7 +145,7 @@ export async function rumijaGatewayRoutes(fastify: FastifyInstance) {
           .code(err.statusCode || 500)
           .send(err.body || { message: "Error" });
       }
-    }
+    },
   );
 
   fastify.get(
@@ -169,7 +169,7 @@ export async function rumijaGatewayRoutes(fastify: FastifyInstance) {
           .code(err.statusCode || 500)
           .send(err.body || { message: "Error" });
       }
-    }
+    },
   );
 
   fastify.post(
@@ -193,7 +193,7 @@ export async function rumijaGatewayRoutes(fastify: FastifyInstance) {
           .code(err.statusCode || 500)
           .send(err.body || { message: "Error" });
       }
-    }
+    },
   );
 
   fastify.put(
@@ -218,7 +218,7 @@ export async function rumijaGatewayRoutes(fastify: FastifyInstance) {
           .code(err.statusCode || 500)
           .send(err.body || { message: "Error" });
       }
-    }
+    },
   );
 
   fastify.delete(
@@ -242,7 +242,7 @@ export async function rumijaGatewayRoutes(fastify: FastifyInstance) {
           .code(err.statusCode || 500)
           .send(err.body || { message: "Error" });
       }
-    }
+    },
   );
 
   fastify.get(
@@ -265,7 +265,7 @@ export async function rumijaGatewayRoutes(fastify: FastifyInstance) {
           .code(err.statusCode || 500)
           .send(err.body || { message: "Error" });
       }
-    }
+    },
   );
 
   fastify.get(
@@ -289,7 +289,7 @@ export async function rumijaGatewayRoutes(fastify: FastifyInstance) {
           .code(err.statusCode || 500)
           .send(err.body || { message: "Error" });
       }
-    }
+    },
   );
   fastify.post(
     "/rumija/rumija-types",
@@ -312,7 +312,7 @@ export async function rumijaGatewayRoutes(fastify: FastifyInstance) {
           .code(err.statusCode || 500)
           .send(err.body || { message: "Error" });
       }
-    }
+    },
   );
   fastify.put(
     "/rumija/rumija-types/:id",
@@ -336,7 +336,7 @@ export async function rumijaGatewayRoutes(fastify: FastifyInstance) {
           .code(err.statusCode || 500)
           .send(err.body || { message: "Error" });
       }
-    }
+    },
   );
   fastify.delete(
     "/rumija/rumija-types/:id",
@@ -359,7 +359,7 @@ export async function rumijaGatewayRoutes(fastify: FastifyInstance) {
           .code(err.statusCode || 500)
           .send(err.body || { message: "Error" });
       }
-    }
+    },
   );
   fastify.get(
     "/rumija/rumija-kelas",
@@ -381,7 +381,7 @@ export async function rumijaGatewayRoutes(fastify: FastifyInstance) {
           .code(err.statusCode || 500)
           .send(err.body || { message: "Error" });
       }
-    }
+    },
   );
   fastify.get(
     "/rumija/rumija-kelas/:id",
@@ -404,7 +404,7 @@ export async function rumijaGatewayRoutes(fastify: FastifyInstance) {
           .code(err.statusCode || 500)
           .send(err.body || { message: "Error" });
       }
-    }
+    },
   );
   fastify.post(
     "/rumija/rumija-kelas",
@@ -427,7 +427,7 @@ export async function rumijaGatewayRoutes(fastify: FastifyInstance) {
           .code(err.statusCode || 500)
           .send(err.body || { message: "Error" });
       }
-    }
+    },
   );
   fastify.put(
     "/rumija/rumija-kelas/:id",
@@ -451,7 +451,7 @@ export async function rumijaGatewayRoutes(fastify: FastifyInstance) {
           .code(err.statusCode || 500)
           .send(err.body || { message: "Error" });
       }
-    }
+    },
   );
   fastify.delete(
     "/rumija/rumija-kelas/:id",
@@ -474,6 +474,6 @@ export async function rumijaGatewayRoutes(fastify: FastifyInstance) {
           .code(err.statusCode || 500)
           .send(err.body || { message: "Error" });
       }
-    }
+    },
   );
 }

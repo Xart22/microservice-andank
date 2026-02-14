@@ -6,9 +6,51 @@ import { createWriteStream, createReadStream } from "fs";
 import path from "path";
 import { SapulobangService } from "./sapulobang.service.js";
 import { uploadsDir } from "../../helper/utils.js";
+import { Prisma } from "../../generated/prisma/browser.js";
 
 export class SapulobangController {
   constructor(private sapulobangService: SapulobangService) {}
+
+  private extractFieldValues(body: Record<string, any>) {
+    const entries = Object.entries(body ?? {});
+    const multipartFields = entries.filter(
+      ([, value]) => value?.type === "field",
+    );
+
+    if (multipartFields.length === 0) {
+      return body ?? {};
+    }
+
+    return Object.fromEntries(
+      multipartFields.map(([key, value]) => [key, value.value]),
+    );
+  }
+
+  private parseNumber(value: unknown, fieldName: string) {
+    if (value === undefined || value === null || value === "") {
+      return undefined;
+    }
+
+    const parsed = Number(value);
+    if (Number.isNaN(parsed)) {
+      throw new Error(`Invalid number for ${fieldName}`);
+    }
+
+    return parsed;
+  }
+
+  private parseDate(value: unknown, fieldName: string) {
+    if (value === undefined || value === null || value === "") {
+      return undefined;
+    }
+
+    const parsed = new Date(String(value));
+    if (Number.isNaN(parsed.getTime())) {
+      throw new Error(`Invalid date for ${fieldName}`);
+    }
+
+    return parsed;
+  }
 
   getAllSapulobang = async (request: FastifyRequest, reply: FastifyReply) => {
     const sapulobangList = await this.sapulobangService.getAllSapulobang();
@@ -47,47 +89,57 @@ export class SapulobangController {
     }
 
     // assign image path ke data
-    const payload = {
-      ...Object.fromEntries(
-        Object.entries(body)
-          .filter(([k, v]: any) => v?.type === "field")
-          .map(([k, v]: any) => [k, v.value])
-      ),
-      jumlah: Number(body.jumlah.value),
-      panjang: Number(body.panjang.value),
-      lat_survei: Number(body.lat_survei.value),
-      long_survei: Number(body.long_survei.value),
-      ruas_jalan_id: Number(body.ruas_jalan_id.value),
-      sup_id: Number(body.sup_id.value),
-      uptd_id: Number(body.uptd_id.value),
-      tanggal_survei: new Date(body.tanggal_survei.value),
-      image_survei: filepath,
-      created_by: request.user.sub,
-    };
+    let fields: Record<string, any>;
+    try {
+      fields = this.extractFieldValues(body);
+    } catch (err) {
+      return reply.code(400).send({ message: "Invalid form data" });
+    }
 
-    const newSapulobang = await this.sapulobangService.createSapulobang(
-      payload
-    );
+    let payload: Prisma.SapulobangCreateInput;
+    try {
+      payload = {
+        tanggal_survei: new Date(fields.tanggal_survei),
+        image_survei: filepath,
+        ruas_jalan_id: Number(fields.ruas_jalan_id),
+        sup_id: Number(fields.sup_id),
+        uptd_id: Number(fields.uptd_id),
+        created_by: request.user.sub,
+        jumlah: Number(fields.jumlah),
+        panjang: Number(fields.panjang),
+        lat_survei: Number(fields.lat_survei),
+        long_survei: Number(fields.long_survei),
+        lajur: fields.lajur,
+        lokasi_km: fields.lokasi_km,
+        lokasi_m: fields.lokasi_m,
+        kategori_kedalaman: fields.kategori_kedalaman,
+      };
+    } catch (err: any) {
+      return reply.code(400).send({ message: err?.message || "Invalid data" });
+    }
+
+    const newSapulobang =
+      await this.sapulobangService.createSapulobang(payload);
 
     return reply.send(newSapulobang);
   };
 
   perencanaanSapulobang = async (
     request: FastifyRequest,
-    reply: FastifyReply
+    reply: FastifyReply,
   ) => {
     const { id } = request.params as { id: number };
     const data = request.body as any;
     const updatedSapulobang = await this.sapulobangService.updateSapulobang(
       id,
-      data
+      data,
     );
     return reply.send(updatedSapulobang);
   };
 
   penangananSapulobang = async (
     request: FastifyRequest,
-    reply: FastifyReply
+    reply: FastifyReply,
   ) => {
     const { id } = request.params as { id: number };
     const body = request.body as any;
@@ -118,7 +170,7 @@ export class SapulobangController {
       ...Object.fromEntries(
         Object.entries(body)
           .filter(([k, v]: any) => v?.type === "field")
-          .map(([k, v]: any) => [k, v.value])
+          .map(([k, v]: any) => [k, v.value]),
       ),
       tanggal_penanganan: new Date(),
       image_penanganan: filepath,
@@ -131,7 +183,7 @@ export class SapulobangController {
     const data = request.body as any;
     const updatedSapulobang = await this.sapulobangService.updateSapulobang(
       id,
-      data
+      data,
     );
     return reply.send(updatedSapulobang);
   };
@@ -144,52 +196,48 @@ export class SapulobangController {
 
   findSapulobangByRuasId = async (
     request: FastifyRequest,
-    reply: FastifyReply
+    reply: FastifyReply,
   ) => {
     const { ruas_jalan_id } = request.params as { ruas_jalan_id: number };
-    const sapulobangList = await this.sapulobangService.findSapulobangByRuasId(
-      ruas_jalan_id
-    );
+    const sapulobangList =
+      await this.sapulobangService.findSapulobangByRuasId(ruas_jalan_id);
     return reply.send(sapulobangList);
   };
 
   findSapulobangBySupId = async (
     request: FastifyRequest,
-    reply: FastifyReply
+    reply: FastifyReply,
   ) => {
     const { sup_id } = request.params as { sup_id: number };
-    const sapulobangList = await this.sapulobangService.findSapulobangBySupId(
-      sup_id
-    );
+    const sapulobangList =
+      await this.sapulobangService.findSapulobangBySupId(sup_id);
     return reply.send(sapulobangList);
   };
 
   findSapulobangByUptdId = async (
     request: FastifyRequest,
-    reply: FastifyReply
+    reply: FastifyReply,
   ) => {
     const { uptd_id } = request.params as { uptd_id: number };
-    const sapulobangList = await this.sapulobangService.findSapulobangByUptdId(
-      uptd_id
-    );
+    const sapulobangList =
+      await this.sapulobangService.findSapulobangByUptdId(uptd_id);
     return reply.send(sapulobangList);
   };
 
   findSapulobangByUser = async (
     request: FastifyRequest,
-    reply: FastifyReply
+    reply: FastifyReply,
   ) => {
     const params = request.params as { user_id?: number };
     const user_id = params.user_id ?? request.user.sub;
-    const sapulobangList = await this.sapulobangService.findSapulobangByUserId(
-      user_id
-    );
+    const sapulobangList =
+      await this.sapulobangService.findSapulobangByUserId(user_id);
     return reply.send(sapulobangList);
   };
 
   getFileImageSapulobang = async (
     request: FastifyRequest,
-    reply: FastifyReply
+    reply: FastifyReply,
   ) => {
     const { filename } = request.params as { filename: string };
     const filepath = path.join(uploadsDir, filename);
