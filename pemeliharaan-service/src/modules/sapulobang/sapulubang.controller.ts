@@ -59,7 +59,9 @@ export class SapulobangController {
 
   getSapulobangById = async (request: FastifyRequest, reply: FastifyReply) => {
     const { id } = request.params as { id: number };
-    const sapulobang = await this.sapulobangService.getSapulobangById(id);
+    const sapulobang = await this.sapulobangService.getSapulobangById(
+      parseInt(String(id)),
+    );
     return reply.send(sapulobang);
   };
 
@@ -131,7 +133,7 @@ export class SapulobangController {
     const { id } = request.params as { id: number };
     const data = request.body as any;
     const updatedSapulobang = await this.sapulobangService.updateSapulobang(
-      id,
+      parseInt(String(id)),
       data,
     );
     return reply.send(updatedSapulobang);
@@ -151,7 +153,9 @@ export class SapulobangController {
     const file = body.image_penanganan; // contoh field name: image
 
     if (!file || !file.file) {
-      return reply.code(400).send({ message: "Image file is required" });
+      return reply
+        .code(400)
+        .send({ message: "image_penanganan file is required" });
     }
 
     // path upload
@@ -176,21 +180,83 @@ export class SapulobangController {
       image_penanganan: filepath,
       penanganan_by: request.user.sub,
     };
-  };
 
-  updateSapulobang = async (request: FastifyRequest, reply: FastifyReply) => {
-    const { id } = request.params as { id: number };
-    const data = request.body as any;
     const updatedSapulobang = await this.sapulobangService.updateSapulobang(
-      id,
-      data,
+      parseInt(String(id)),
+      payload,
     );
     return reply.send(updatedSapulobang);
   };
 
+  updateSapulobang = async (request: FastifyRequest, reply: FastifyReply) => {
+    const body: any = request.body;
+
+    if (!body || typeof body !== "object") {
+      return reply.code(400).send({ message: "Body must be object" });
+    }
+
+    // file dari multipart
+    const file = body.image_survei; // contoh field name: image
+
+    if (!file || !file.file) {
+      return reply.code(400).send({ message: "image_survei file is required" });
+    }
+
+    // path upload
+    const fileName = file.filename;
+    const filepath = path.join(uploadsDir, fileName);
+
+    try {
+      await pipeline(file.file, createWriteStream(`${filepath}`));
+    } catch (err) {
+      console.error("File upload failed:", err);
+      return reply.code(500).send({ message: "Upload failed" });
+    }
+
+    // assign image path ke data
+    let fields: Record<string, any>;
+    try {
+      fields = this.extractFieldValues(body);
+    } catch (err) {
+      return reply.code(400).send({ message: "Invalid form data" });
+    }
+
+    let payload: Prisma.SapulobangCreateInput;
+    try {
+      payload = {
+        tanggal_survei: new Date(fields.tanggal_survei),
+        image_survei: filepath,
+        ruas_jalan_id: Number(fields.ruas_jalan_id),
+        sup_id: Number(fields.sup_id),
+        uptd_id: Number(fields.uptd_id),
+        created_by: request.user.sub,
+        jumlah: Number(fields.jumlah),
+        panjang: Number(fields.panjang),
+        lat_survei: Number(fields.lat_survei),
+        long_survei: Number(fields.long_survei),
+        lajur: fields.lajur,
+        lokasi_km: fields.lokasi_km,
+        lokasi_m: fields.lokasi_m,
+        kategori_kedalaman: fields.kategori_kedalaman,
+      };
+    } catch (err: any) {
+      return reply.code(400).send({ message: err?.message || "Invalid data" });
+    }
+    const { id } = request.params as { id: number };
+    const newSapulobang = await this.sapulobangService.updateSapulobang(
+      parseInt(String(id)),
+      payload,
+    );
+
+    return reply.send(newSapulobang);
+  };
+
   deleteSapulobang = async (request: FastifyRequest, reply: FastifyReply) => {
     const { id } = request.params as { id: number };
-    const deletedSapulobang = await this.sapulobangService.deleteSapulobang(id);
+
+    const deletedSapulobang = await this.sapulobangService.deleteSapulobang(
+      parseInt(String(id)),
+    );
     return reply.send(deletedSapulobang);
   };
 
@@ -199,8 +265,9 @@ export class SapulobangController {
     reply: FastifyReply,
   ) => {
     const { ruas_jalan_id } = request.params as { ruas_jalan_id: number };
-    const sapulobangList =
-      await this.sapulobangService.findSapulobangByRuasId(ruas_jalan_id);
+    const sapulobangList = await this.sapulobangService.findSapulobangByRuasId(
+      parseInt(String(ruas_jalan_id)),
+    );
     return reply.send(sapulobangList);
   };
 
@@ -209,8 +276,9 @@ export class SapulobangController {
     reply: FastifyReply,
   ) => {
     const { sup_id } = request.params as { sup_id: number };
-    const sapulobangList =
-      await this.sapulobangService.findSapulobangBySupId(sup_id);
+    const sapulobangList = await this.sapulobangService.findSapulobangBySupId(
+      parseInt(String(sup_id)),
+    );
     return reply.send(sapulobangList);
   };
 
@@ -219,8 +287,9 @@ export class SapulobangController {
     reply: FastifyReply,
   ) => {
     const { uptd_id } = request.params as { uptd_id: number };
-    const sapulobangList =
-      await this.sapulobangService.findSapulobangByUptdId(uptd_id);
+    const sapulobangList = await this.sapulobangService.findSapulobangByUptdId(
+      parseInt(String(uptd_id)),
+    );
     return reply.send(sapulobangList);
   };
 
@@ -230,8 +299,9 @@ export class SapulobangController {
   ) => {
     const params = request.params as { user_id?: number };
     const user_id = params.user_id ?? request.user.sub;
-    const sapulobangList =
-      await this.sapulobangService.findSapulobangByUserId(user_id);
+    const sapulobangList = await this.sapulobangService.findSapulobangByUserId(
+      parseInt(String(user_id)),
+    );
     return reply.send(sapulobangList);
   };
 
