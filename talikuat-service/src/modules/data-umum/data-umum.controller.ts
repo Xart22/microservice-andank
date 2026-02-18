@@ -77,7 +77,7 @@ export class DataUmumController {
     const created = await this.dataUmumService.createDataUmum(
       headerData,
       detailData,
-      ruasData
+      ruasData,
     );
 
     return reply.code(201).send(created);
@@ -91,12 +91,33 @@ export class DataUmumController {
 
   createAdendumDataUmum = async (
     request: FastifyRequest,
-    reply: FastifyReply
+    reply: FastifyReply,
   ) => {
     const dataUmumId = Number((request.params as any).id);
     const body = request.body as CreateDataUmumBody;
 
     const { dataUmumDetail, dataUmumRuas, ...headerFields } = body;
+
+    // --- Header (DataUmum) - optional updates ---
+    const headerData: Partial<Prisma.DataUmumUncheckedCreateInput> = {};
+    if (headerFields.pemda) headerData.pemda = headerFields.pemda;
+    if (headerFields.opd) headerData.opd = headerFields.opd;
+    if (headerFields.nm_paket) headerData.nm_paket = headerFields.nm_paket;
+    if (headerFields.no_kontrak)
+      headerData.no_kontrak = headerFields.no_kontrak;
+    if (headerFields.tgl_kontrak)
+      headerData.tgl_kontrak = new Date(headerFields.tgl_kontrak);
+    if (headerFields.no_spmk) headerData.no_spmk = headerFields.no_spmk;
+    if (headerFields.tgl_spmk)
+      headerData.tgl_spmk = new Date(headerFields.tgl_spmk);
+    if (headerFields.kategori_paket)
+      headerData.kategori_paket = headerFields.kategori_paket;
+    if (headerFields.uptd_id) headerData.uptd_id = headerFields.uptd_id;
+    if (headerFields.ppk_kegiatan)
+      headerData.ppk_kegiatan = headerFields.ppk_kegiatan;
+    if (headerFields.thn) headerData.thn = headerFields.thn;
+
+    // --- Detail (DataUmumDetail) ---
     const detailData: Omit<
       Prisma.DataUmumDetailUncheckedCreateInput,
       "data_umum_id"
@@ -140,8 +161,9 @@ export class DataUmumController {
 
     const createdAdendum = await this.dataUmumService.createAdendum(
       dataUmumId,
+      headerData,
       detailData,
-      ruasData
+      ruasData,
     );
     return reply.code(201).send(createdAdendum);
   };
@@ -196,7 +218,7 @@ export class DataUmumController {
       dataUmumId,
       headerFields,
       detailData,
-      ruasData
+      ruasData,
     );
     return reply.code(200).send(updated);
   };

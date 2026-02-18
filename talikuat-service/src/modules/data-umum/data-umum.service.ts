@@ -16,7 +16,7 @@ export class DataUmumService {
   async createDataUmum(
     header: Prisma.DataUmumUncheckedCreateInput,
     detail: DataUmumDetailCreateWithoutFK,
-    ruasList: DataUmumRuasCreateWithoutFK[]
+    ruasList: DataUmumRuasCreateWithoutFK[],
   ) {
     return this.prisma.$transaction(async (tx) => {
       const createdHeader = await tx.dataUmum.create({
@@ -90,7 +90,7 @@ export class DataUmumService {
     id: number,
     header: Prisma.DataUmumUncheckedCreateInput,
     detail: DataUmumDetailCreateWithoutFK,
-    ruasList: DataUmumRuasCreateWithoutFK[]
+    ruasList: DataUmumRuasCreateWithoutFK[],
   ) {
     return this.prisma.$transaction(async (tx) => {
       const updatedHeader = await tx.dataUmum.update({
@@ -159,8 +159,9 @@ export class DataUmumService {
 
   createAdendum(
     id: number,
+    header: Partial<Prisma.DataUmumUncheckedCreateInput>,
     detail: DataUmumDetailCreateWithoutFK,
-    ruasList: DataUmumRuasCreateWithoutFK[]
+    ruasList: DataUmumRuasCreateWithoutFK[],
   ) {
     return this.prisma.$transaction(async (tx) => {
       const existingHeader = await tx.dataUmum.findUnique({
@@ -169,17 +170,30 @@ export class DataUmumService {
       if (!existingHeader) {
         throw new Error("Data Umum not found");
       }
-      //set not active to existing detail
+
+      // Update header if there are changes
+      if (Object.keys(header).length > 0) {
+        await tx.dataUmum.update({
+          where: { id },
+          data: header,
+        });
+      }
+
+      // Set not active to existing detail
       await tx.dataUmumDetail.updateMany({
         where: { data_umum_id: id, is_active: true },
         data: { is_active: false },
       });
+
+      // Create new detail
       const createdDetail = await tx.dataUmumDetail.create({
         data: {
           ...detail,
           data_umum_id: id,
         },
       });
+
+      // Create new ruas
       if (ruasList.length > 0) {
         await tx.dataUmumRuas.createMany({
           data: ruasList.map((ruas) => ({
@@ -188,7 +202,23 @@ export class DataUmumService {
           })),
         });
       }
-      return createdDetail;
+
+      // Return full data structure
+      const result = await tx.dataUmum.findUnique({
+        where: { id },
+        include: {
+          detail: {
+            where: { is_active: true },
+            include: {
+              dataUmumRuas: true,
+            },
+          },
+          laporanMingguans: true,
+          fileDokumens: true,
+        },
+      });
+
+      return result;
     });
   }
 

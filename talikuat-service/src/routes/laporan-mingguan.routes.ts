@@ -6,6 +6,25 @@ export default async function laporanMingguanRoutes(fastify: FastifyInstance) {
   const service = new LaporanMingguanService(fastify.prisma);
   const controller = new LaporanMingguanController(service);
 
+  // Get all laporan mingguan
+  fastify.get(
+    "/",
+    {
+      preHandler: [fastify.authenticate],
+    },
+    controller.getAllLaporanMingguan,
+  );
+
+  // Get laporan mingguan by ID
+  fastify.get(
+    "/:id",
+    {
+      preHandler: [fastify.authenticate],
+    },
+    controller.getLaporanMingguanById,
+  );
+
+  // Get laporan mingguan by data umum ID
   fastify.get(
     "/data-umum/:dataUmumId",
     {
@@ -13,13 +32,17 @@ export default async function laporanMingguanRoutes(fastify: FastifyInstance) {
     },
     controller.getLaporanMingguanByDataUmumId,
   );
+
+  // Create laporan mingguan
   fastify.post(
-    "/data-umum/:id",
+    "/",
     {
       preHandler: [fastify.authenticate],
     },
     controller.createLaporanMingguan,
   );
+
+  // Update laporan mingguan
   fastify.put(
     "/:id",
     {
@@ -27,6 +50,8 @@ export default async function laporanMingguanRoutes(fastify: FastifyInstance) {
     },
     controller.updateLaporanMingguan,
   );
+
+  // Delete laporan mingguan
   fastify.delete(
     "/:id",
     {
