@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { RumijaKelasService } from "./rumija-kelas.service.js";
-import { RumijaKelasUncheckedCreateInput } from "../../generated/prisma/models.js";
+import { Prisma } from "../../generated/prisma/client.js";
 
 export class RumijaKelasController {
   rumijaKelasService: RumijaKelasService;
@@ -15,16 +15,15 @@ export class RumijaKelasController {
   getRumijaKelasById = async (req: FastifyRequest, reply: FastifyReply) => {
     const { id } = req.params as { id: string };
     const rumijaKelas = await this.rumijaKelasService.getRumijaKelasById(
-      Number(id)
+      Number(id),
     );
     return reply.send(rumijaKelas);
   };
 
   createRumijaKelas = async (req: FastifyRequest, reply: FastifyReply) => {
-    const payload = req.body as RumijaKelasUncheckedCreateInput;
-    const newRumijaKelas = await this.rumijaKelasService.createRumijaKelas(
-      payload
-    );
+    const payload = req.body as Prisma.RumijaKelasUncheckedCreateInput;
+    const newRumijaKelas =
+      await this.rumijaKelasService.createRumijaKelas(payload);
     return reply.code(201).send(newRumijaKelas);
   };
 

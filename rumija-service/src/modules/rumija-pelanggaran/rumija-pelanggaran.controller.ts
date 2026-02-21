@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 
-import { RumijaPelangaranUncheckedCreateInput } from "../../generated/prisma/models.js";
+import { Prisma } from "../../generated/prisma/client.js";
 import { RumijaPelanggaranService } from "./rumija-pelanggaran.service.js";
 
 export class RumijaPelanggaranController {
@@ -10,7 +10,7 @@ export class RumijaPelanggaranController {
   }
   getAllRumijaPelanggaran = async (
     req: FastifyRequest,
-    reply: FastifyReply
+    reply: FastifyReply,
   ) => {
     const rumijaPelanggaran =
       await this.rumijaPelanggaranService.getAllRumijaPelanggaran();
@@ -18,7 +18,7 @@ export class RumijaPelanggaranController {
   };
   getRumijaPelanggaranById = async (
     req: FastifyRequest,
-    reply: FastifyReply
+    reply: FastifyReply,
   ) => {
     const { id } = req.params as { id: string };
     const rumijaPelanggaran =
@@ -27,16 +27,16 @@ export class RumijaPelanggaranController {
   };
   createRumijaPelanggaran = async (
     req: FastifyRequest,
-    reply: FastifyReply
+    reply: FastifyReply,
   ) => {
-    const payload = req.body as RumijaPelangaranUncheckedCreateInput;
+    const payload = req.body as Prisma.RumijaPelangaranUncheckedCreateInput;
     const newRumijaPelanggaran =
       await this.rumijaPelanggaranService.createRumijaPelanggaran(payload);
     return reply.code(201).send(newRumijaPelanggaran);
   };
   deleteRumijaPelanggaranById = async (
     req: FastifyRequest,
-    reply: FastifyReply
+    reply: FastifyReply,
   ) => {
     const { id } = req.params as { id: string };
     await this.rumijaPelanggaranService.deleteRumijaPelanggaranById(Number(id));
@@ -44,7 +44,7 @@ export class RumijaPelanggaranController {
   };
   updateRumijaPelanggaranById = async (
     req: FastifyRequest,
-    reply: FastifyReply
+    reply: FastifyReply,
   ) => {
     const { id } = req.params as { id: string };
     const payload = req.body as {
@@ -57,7 +57,7 @@ export class RumijaPelanggaranController {
     const updatedRumijaPelanggaran =
       await this.rumijaPelanggaranService.updateRumijaPelanggaranById(
         Number(id),
-        payload
+        payload,
       );
     return reply.send(updatedRumijaPelanggaran);
   };

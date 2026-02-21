@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 
 import { RumijaTypeService } from "./rumija-type.service.js";
-import { RumijaTypeUncheckedCreateInput } from "../../generated/prisma/models.js";
+import { Prisma } from "../../generated/prisma/client.js";
 
 export class RumijaTypeController {
   rumijaTypeService: RumijaTypeService;
@@ -15,16 +15,15 @@ export class RumijaTypeController {
   getRumijaTypeById = async (req: FastifyRequest, reply: FastifyReply) => {
     const { id } = req.params as { id: string };
     const rumijaType = await this.rumijaTypeService.getRumijaTypeById(
-      Number(id)
+      Number(id),
     );
     return reply.send(rumijaType);
   };
 
   createRumijaType = async (req: FastifyRequest, reply: FastifyReply) => {
-    const payload = req.body as RumijaTypeUncheckedCreateInput;
-    const newRumijaType = await this.rumijaTypeService.createRumijaType(
-      payload
-    );
+    const payload = req.body as Prisma.RumijaTypeUncheckedCreateInput;
+    const newRumijaType =
+      await this.rumijaTypeService.createRumijaType(payload);
     return reply.code(201).send(newRumijaType);
   };
   deleteRumijaTypeById = async (req: FastifyRequest, reply: FastifyReply) => {
@@ -41,7 +40,7 @@ export class RumijaTypeController {
     };
     const updatedRumijaType = await this.rumijaTypeService.updateRumijaTypeById(
       Number(id),
-      payload
+      payload,
     );
     return reply.send(updatedRumijaType);
   };
